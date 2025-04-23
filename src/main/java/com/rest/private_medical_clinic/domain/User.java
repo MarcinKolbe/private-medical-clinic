@@ -1,5 +1,6 @@
 package com.rest.private_medical_clinic.domain;
 
+import com.rest.private_medical_clinic.enums.UserRole;
 import jakarta.persistence.*;
 import lombok.Data;
 

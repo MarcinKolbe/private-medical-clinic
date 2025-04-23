@@ -1,5 +1,6 @@
 package com.rest.private_medical_clinic.domain;
 
+import com.rest.private_medical_clinic.enums.AppointmentStatus;
 import jakarta.persistence.*;
 import lombok.Data;
 
@@ -32,4 +33,7 @@ public class Appointment {
 
     @Column(name = "NOTES")
     private String notes;
+
+    @OneToOne(mappedBy = "appointment", cascade = CascadeType.ALL)
+    private Diagnosis diagnosis;
 }
