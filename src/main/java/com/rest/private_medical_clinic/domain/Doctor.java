@@ -27,9 +27,12 @@ public class Doctor {
 
     @OneToOne
     @MapsId
-    @JoinColumn(name = "ID")
+    @JoinColumn(name = "ID", nullable = false)
     private User user;
 
     @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
     private List<Appointment> appointmentList;
+
+    @OneToMany(mappedBy = "doctor", cascade = CascadeType.ALL, fetch = FetchType.EAGER)
+    private List<Review> reviewList;
 }
