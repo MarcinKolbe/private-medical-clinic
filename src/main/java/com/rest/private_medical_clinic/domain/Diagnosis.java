@@ -19,12 +19,12 @@ public class Diagnosis {
     @JoinColumn(name = "APPOINTMENT_ID", nullable = false)
     private Appointment appointment;
 
-    @Column(name = "DESCRIPTION")
+    @Column(name = "DESCRIPTION", nullable = false)
     private String description;
 
     @Column(name = "RECOMMENDATION")
     private String recommendation;
 
-    @Column(name = "CREATED_AT")
+    @Column(name = "CREATED_AT", nullable = false)
     private LocalDateTime createdAt;
 }

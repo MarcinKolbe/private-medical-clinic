@@ -3,7 +3,7 @@ package com.rest.private_medical_clinic.domain;
 import jakarta.persistence.*;
 import lombok.Data;
 
-import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Data
 @Entity
@@ -29,6 +29,6 @@ public class Review {
     @Column(name = "COMMENT")
     private String comment;
 
-    @Column(name = "REVIEW_DATE")
-    private LocalDate reviewDate;
+    @Column(name = "CREATED_AT")
+    private LocalDateTime createdAt;
 }

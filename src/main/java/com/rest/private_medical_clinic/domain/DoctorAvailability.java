@@ -1,14 +1,16 @@
 package com.rest.private_medical_clinic.domain;
 
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.ArrayList;
-import java.util.List;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "DOCTOR_AVAILABILITY")
 public class DoctorAvailability {
@@ -18,26 +20,19 @@ public class DoctorAvailability {
     @Column(name = "ID")
     private long id;
 
-    @ManyToOne(fetch = FetchType.EAGER)
+    @ManyToOne
     @JoinColumn(name = "DOCTOR_ID", nullable = false)
     private Doctor doctor;
 
-    @Column(name = "AVAILABLE_DATE")
+    @Column(name = "AVAILABLE_DATE", nullable = false)
     private LocalDate date;
 
-    @Column(name = "START_TIME")
+    @Column(name = "START_TIME", nullable = false)
     private LocalTime startTime;
 
-    @Column(name = "END_TIME")
+    @Column(name = "END_TIME", nullable = false)
     private LocalTime endTime;
 
-    public List<LocalTime> getAvailableSlots(LocalTime start, LocalTime end) {
-        List<LocalTime> slots = new ArrayList<>();
-        LocalTime current = start;
-        while (!current.plusMinutes(30).isAfter(end)) {
-            slots.add(current);
-            current = current.plusMinutes(30);
-        }
-        return slots;
-    }
+    @Column(name = "AVAILABLE", nullable = false)
+    private boolean available = true;
 }

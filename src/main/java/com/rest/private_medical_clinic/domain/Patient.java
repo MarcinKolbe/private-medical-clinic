@@ -3,6 +3,7 @@ package com.rest.private_medical_clinic.domain;
 import jakarta.persistence.*;
 import lombok.Data;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Data
@@ -24,6 +25,9 @@ public class Patient {
 
     @Column(name = "PESEL", nullable = false)
     private String pesel;
+
+    @Column(name = "BIRTH_DATE")
+    private LocalDate birthDate;
 
     @OneToOne
     @MapsId
