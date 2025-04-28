@@ -41,7 +41,12 @@ public class DoctorAvailabilityService {
     }
 
     public DoctorAvailability updateDoctorAvailability(DoctorAvailability doctorAvailability) {
-        return availabilityRepo.save(doctorAvailability);
+        DoctorAvailability availability = findDoctorAvailabilityById(doctorAvailability.getId());
+        availability.setDate(doctorAvailability.getDate());
+        availability.setStartTime(doctorAvailability.getStartTime());
+        availability.setEndTime(doctorAvailability.getEndTime());
+        availability.setAvailable(doctorAvailability.isAvailable());
+        return availabilityRepo.save(availability);
     }
 
     public void deleteDoctorAvailability(Long id) {

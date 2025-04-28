@@ -22,7 +22,7 @@ public class DoctorAvailabilityMapper {
     }
 
     public DoctorAvailability mapToEntity(DoctorAvailabilityDto doctorAvailabilityDto) {
-        Doctor doctor = doctorService.findDoctorById(doctorAvailabilityDto.getDoctorId());
+        Doctor doctor = doctorService.getDoctor(doctorAvailabilityDto.getDoctorId());
         return new DoctorAvailability(doctorAvailabilityDto.getId(), doctor, doctorAvailabilityDto.getDate(),
                 doctorAvailabilityDto.getStartTime(), doctorAvailabilityDto.getEndTime(),
                 doctorAvailabilityDto.isAvailable());

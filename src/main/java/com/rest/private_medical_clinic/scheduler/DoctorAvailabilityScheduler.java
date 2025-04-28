@@ -19,7 +19,7 @@ public class DoctorAvailabilityScheduler {
     @Scheduled(cron = "0 0 0 * * Sat")
     public void generateAvailabilityForAllDoctorsForNext7Days() {
 
-        List<Doctor> doctors = doctorService.findAllDoctors();
+        List<Doctor> doctors = doctorService.getAllDoctors();
         for (Doctor doctor : doctors) {
             doctorAvailabilityService.generateDoctorAvailabilityForNext7Days(doctor);
         }

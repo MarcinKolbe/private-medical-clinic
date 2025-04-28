@@ -13,24 +13,28 @@ public class DoctorService {
 
     private final DoctorRepository doctorRepository;
 
-    public List<Doctor> findAllDoctors() {
+    public List<Doctor> getAllDoctors() {
         return doctorRepository.findAll();
     }
 
-    public Doctor findDoctorById(long doctorId) {
+    public Doctor getDoctor(long doctorId) {
         return doctorRepository.findById(doctorId).orElseThrow(() -> new RuntimeException("Doctor not found"));
     }
 
-    public Doctor save(Doctor doctor) {
+    public Doctor saveDoctor(Doctor doctor) {
         return doctorRepository.save(doctor);
     }
 
     public Doctor updateDoctor(Doctor doctor) {
-        return doctorRepository.save(doctor);
+        Doctor updatedDoctor = getDoctor(doctor.getId());
+        updatedDoctor.setFirstname(doctor.getFirstname());
+        updatedDoctor.setLastname(doctor.getLastname());
+        updatedDoctor.setSpecialization(doctor.getSpecialization());
+        return doctorRepository.save(updatedDoctor);
     }
 
     public void deleteDoctor(long doctorId) {
-        Doctor doctor = findDoctorById(doctorId);
+        Doctor doctor = getDoctor(doctorId);
         doctorRepository.deleteById(doctor.getId());
     }
 }
