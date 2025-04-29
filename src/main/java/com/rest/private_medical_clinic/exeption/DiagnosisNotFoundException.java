@@ -1,0 +1,8 @@
+package com.rest.private_medical_clinic.exeption;
+
+public class DiagnosisNotFoundException extends RuntimeException {
+
+    public DiagnosisNotFoundException(long id) {
+        super("Diagnosis with id " + id + " not found");
+    }
+}

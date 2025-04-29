@@ -7,7 +7,6 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
-import java.util.List;
 
 @Data
 @AllArgsConstructor
@@ -21,5 +20,5 @@ public class AppointmentDto {
     private LocalTime time;
     private AppointmentStatus status;
     private String notes;
-    private List<Long> diagnosisIdList;
+    private long diagnoseId;
 }

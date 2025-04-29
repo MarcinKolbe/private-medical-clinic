@@ -5,6 +5,9 @@ import com.rest.private_medical_clinic.domain.Doctor;
 import com.rest.private_medical_clinic.domain.Review;
 import com.rest.private_medical_clinic.domain.User;
 import com.rest.private_medical_clinic.domain.dto.DoctorDto;
+import com.rest.private_medical_clinic.exeption.AppointmentNotFoundException;
+import com.rest.private_medical_clinic.exeption.ReviewNotFoundException;
+import com.rest.private_medical_clinic.exeption.UserNotFoundException;
 import com.rest.private_medical_clinic.repository.AppointmentRepository;
 import com.rest.private_medical_clinic.repository.ReviewRepository;
 import com.rest.private_medical_clinic.repository.UserRepository;
@@ -28,12 +31,12 @@ public class DoctorMapper {
 
     public Doctor mapToEntity (DoctorDto doctorDto) {
          List<Appointment> appointments = doctorDto.getAppointmentIdList().stream()
-                 .map(id -> appointmentRepository.findById(id).orElseThrow(() -> new RuntimeException("Appointment not found")))
+                 .map(id -> appointmentRepository.findById(id).orElseThrow(() -> new AppointmentNotFoundException(id)))
                  .toList();
          List<Review> reviews = doctorDto.getReviewIdList().stream()
-                 .map(id -> reviewRepository.findById(id).orElseThrow(() -> new RuntimeException("Review not found")))
+                 .map(id -> reviewRepository.findById(id).orElseThrow(() -> new ReviewNotFoundException(id)))
                  .toList();
-         User user = userRepository.findById(doctorDto.getUserId()).orElseThrow(() -> new RuntimeException("User not found"));
+         User user = userRepository.findById(doctorDto.getUserId()).orElseThrow(() -> new UserNotFoundException(doctorDto.getId()));
 
          Doctor doctor = new Doctor();
          doctor.setId(doctorDto.getId());

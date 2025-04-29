@@ -3,6 +3,8 @@ package com.rest.private_medical_clinic.service;
 import com.rest.private_medical_clinic.domain.Doctor;
 import com.rest.private_medical_clinic.domain.DoctorAvailability;
 import com.rest.private_medical_clinic.domain.DoctorScheduleTemplate;
+import com.rest.private_medical_clinic.exeption.DoctorAvailabilityException;
+import com.rest.private_medical_clinic.exeption.DoctorNotFoundException;
 import com.rest.private_medical_clinic.repository.DoctorAvailabilityRepository;
 import com.rest.private_medical_clinic.repository.DoctorRepository;
 import com.rest.private_medical_clinic.repository.DoctorScheduleTemplateRepository;
@@ -28,11 +30,11 @@ public class DoctorAvailabilityService {
     }
 
     public DoctorAvailability findDoctorAvailabilityById(Long id) {
-        return availabilityRepo.findById(id).orElseThrow(() -> new RuntimeException("No Doctor Availability found with id: " + id));
+        return availabilityRepo.findById(id).orElseThrow(() -> new DoctorAvailabilityException(id));
     }
 
     public List<DoctorAvailability> findDoctorAvailabilityByDoctorId(Long doctorId) {
-        Doctor doctor = doctorRepo.findById(doctorId).orElseThrow(() -> new RuntimeException("No Doctor found with id: " + doctorId));
+        Doctor doctor = doctorRepo.findById(doctorId).orElseThrow(() -> new DoctorNotFoundException(doctorId));
         return availabilityRepo.findByDoctorId(doctor.getId());
     }
 
@@ -52,6 +54,30 @@ public class DoctorAvailabilityService {
     public void deleteDoctorAvailability(Long id) {
         DoctorAvailability doctorAvailability = availabilityRepo.findById(id).orElseThrow(() -> new RuntimeException("No Doctor Availability found with id: " + id));
         availabilityRepo.delete(doctorAvailability);
+    }
+
+    public List<DoctorAvailability> getAvailableSlotsForDoctor(Long doctorId) {
+        return availabilityRepo.findAllByDoctorIdAndAvailableTrueOrderByDateAscStartTimeAsc(doctorId);
+    }
+
+    @Transactional
+    public void markSlotAsUnavailable(Long doctorId, LocalDate date, LocalTime startTime) {
+        DoctorAvailability availability = availabilityRepo
+                .findByDoctorIdAndDateAndStartTime(doctorId, date, startTime)
+                .orElseThrow(() -> new IllegalStateException("Availability slot not found."));
+
+        availability.setAvailable(false);
+        availabilityRepo.save(availability);
+    }
+
+    @Transactional
+    public void markSlotAsAvailable(Long doctorId, LocalDate date, LocalTime time) {
+        DoctorAvailability availability = availabilityRepo
+                .findByDoctorIdAndDateAndStartTime(doctorId, date, time)
+                .orElseThrow(() -> new IllegalStateException("Availability slot not found."));
+
+        availability.setAvailable(true);
+        availabilityRepo.save(availability);
     }
 
     @Transactional

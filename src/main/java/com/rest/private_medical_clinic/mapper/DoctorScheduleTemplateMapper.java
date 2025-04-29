@@ -4,17 +4,18 @@ import com.rest.private_medical_clinic.domain.Doctor;
 import com.rest.private_medical_clinic.domain.DoctorScheduleTemplate;
 import com.rest.private_medical_clinic.domain.dto.DoctorScheduleTemplateDto;
 import com.rest.private_medical_clinic.repository.DoctorRepository;
+import com.rest.private_medical_clinic.service.DoctorService;
 import lombok.AllArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.util.List;
-import java.util.Optional;
 
 @Service
 @AllArgsConstructor
 public class DoctorScheduleTemplateMapper {
 
     private final DoctorRepository doctorRepository;
+    private final DoctorService doctorService;
 
     public DoctorScheduleTemplateDto mapToDto(DoctorScheduleTemplate doctorScheduleTemplate) {
         return new DoctorScheduleTemplateDto(doctorScheduleTemplate.getId(),
@@ -23,9 +24,8 @@ public class DoctorScheduleTemplateMapper {
     }
 
     public DoctorScheduleTemplate mapToEntity(DoctorScheduleTemplateDto doctorScheduleTemplateDto) {
-        Optional<Doctor> doctor = doctorRepository.findById(doctorScheduleTemplateDto.getDoctorId());
-        Doctor doctorEntity = doctor.orElse(null);
-        return new DoctorScheduleTemplate(doctorScheduleTemplateDto.getId(), doctorEntity,
+        Doctor doctor = doctorService.getDoctor(doctorScheduleTemplateDto.getDoctorId());
+        return new DoctorScheduleTemplate(doctorScheduleTemplateDto.getId(), doctor,
                 doctorScheduleTemplateDto.getDayOfWeek(), doctorScheduleTemplateDto.getStartTime(),
                 doctorScheduleTemplateDto.getEndTime());
     }
