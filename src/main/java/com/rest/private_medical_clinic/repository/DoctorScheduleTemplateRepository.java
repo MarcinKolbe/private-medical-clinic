@@ -13,5 +13,5 @@ public interface DoctorScheduleTemplateRepository extends CrudRepository<DoctorS
     @Override
     List<DoctorScheduleTemplate> findAll();
 
-    List<DoctorScheduleTemplate> findByDoctor(Doctor doctor);
+    List<DoctorScheduleTemplate> findByDoctor_Id(long doctorId);
 }
