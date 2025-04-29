@@ -2,11 +2,15 @@ package com.rest.private_medical_clinic.domain;
 
 import com.rest.private_medical_clinic.enums.UserRole;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name="USERS")
 public class User {

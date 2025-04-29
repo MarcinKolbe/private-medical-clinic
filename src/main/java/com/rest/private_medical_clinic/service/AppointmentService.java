@@ -1,9 +1,11 @@
 package com.rest.private_medical_clinic.service;
 
 import com.rest.private_medical_clinic.domain.Appointment;
+import com.rest.private_medical_clinic.domain.Diagnosis;
 import com.rest.private_medical_clinic.domain.Doctor;
 import com.rest.private_medical_clinic.domain.Patient;
 import com.rest.private_medical_clinic.domain.dto.AppointmentDto;
+import com.rest.private_medical_clinic.domain.dto.DiagnosisDto;
 import com.rest.private_medical_clinic.enums.AppointmentStatus;
 import com.rest.private_medical_clinic.exeption.AppointmentNotFoundException;
 import com.rest.private_medical_clinic.repository.AppointmentRepository;
@@ -13,6 +15,7 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 import java.util.List;
 
 @Service
@@ -24,6 +27,7 @@ public class AppointmentService {
     private final PatientService patientService;
     private final AppointmentValidator appointmentValidator;
     private final DoctorAvailabilityService doctorAvailabilityService;
+    private final DiagnosisService diagnosisService;
 
     public List<Appointment> getAllAppointments() {
         return appointmentRepository.findAll();
@@ -109,5 +113,24 @@ public class AppointmentService {
 
     public List<Appointment> getAllAppointmentsByDate(LocalDate date) {
         return appointmentRepository.findAllByDateOrderByDateDesc(date);
+    }
+
+    @Transactional
+    public void addDiagnosisToAppointment(long appointmentId, DiagnosisDto diagnosisRequest) {
+        Appointment appointment = getAppointmentById(appointmentId);
+
+        if (appointment.getStatus() == AppointmentStatus.CANCELLED) {
+            throw new IllegalStateException("Cannot add diagnosis to cancelled appointment.");
+        }
+        Diagnosis diagnosis = new Diagnosis();
+        diagnosis.setAppointment(appointment);
+        diagnosis.setDescription(diagnosisRequest.getDescription());
+        diagnosis.setRecommendation(diagnosisRequest.getRecommendations());
+        diagnosis.setCreatedAt(LocalDateTime.now());
+        diagnosisService.addDiagnosis(diagnosis);
+
+        appointment.setDiagnosis(diagnosis);
+        appointment.setStatus(AppointmentStatus.COMPLETED);
+        appointmentRepository.save(appointment);
     }
 }

@@ -2,6 +2,7 @@ package com.rest.private_medical_clinic.controller;
 
 import com.rest.private_medical_clinic.domain.Appointment;
 import com.rest.private_medical_clinic.domain.dto.AppointmentDto;
+import com.rest.private_medical_clinic.domain.dto.DiagnosisDto;
 import com.rest.private_medical_clinic.mapper.AppointmentMapper;
 import com.rest.private_medical_clinic.service.AppointmentService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
@@ -73,5 +74,11 @@ public class AppointmentController {
     public ResponseEntity<List<AppointmentDto>> getAppointmentsByDate(@RequestParam("date") @DateTimeFormat(iso = DateTimeFormat.ISO.DATE) LocalDate date) {
         List<Appointment> appointments = appointmentService.getAllAppointmentsByDate(date);
         return ResponseEntity.ok(appointmentMapper.mapToDtoList(appointments));
+    }
+
+    @PutMapping("/{appointmentId}/add-diagnosis")
+    public ResponseEntity<Void> addDiagnosisToAppointment(@PathVariable long appointmentId, @RequestBody DiagnosisDto diagnosisDto) {
+        appointmentService.addDiagnosisToAppointment(appointmentId, diagnosisDto);
+        return ResponseEntity.noContent().build();
     }
 }
