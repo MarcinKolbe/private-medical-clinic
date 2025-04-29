@@ -5,6 +5,7 @@ import com.rest.private_medical_clinic.domain.dto.DoctorScheduleTemplateDto;
 import com.rest.private_medical_clinic.mapper.DoctorScheduleTemplateMapper;
 import com.rest.private_medical_clinic.service.DoctorScheduleTemplateService;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -37,7 +38,7 @@ public class DoctorScheduleTemplateController {
         return ResponseEntity.noContent().build();
     }
 
-    @PostMapping("/doctor/{doctorId}")
+    @PostMapping(value = "/doctor/{doctorId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DoctorScheduleTemplateDto> createTemplateForDoctor(@PathVariable long doctorId, @RequestBody DoctorScheduleTemplateDto doctorScheduleTemplateDto) {
         DoctorScheduleTemplate doctorScheduleTemplate = doctorScheduleTemplateService.createDoctorScheduleTemplate(doctorId, doctorScheduleTemplateDto);
         return ResponseEntity.ok(doctorScheduleTemplateMapper.mapToDto(doctorScheduleTemplate));
@@ -49,7 +50,7 @@ public class DoctorScheduleTemplateController {
         return ResponseEntity.ok(doctorScheduleTemplateMapper.mapToDtoList(doctorScheduleTemplates));
     }
 
-    @PutMapping("/doctor/{doctorId}")
+    @PutMapping(value = "/doctor/{doctorId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DoctorScheduleTemplateDto> updateTemplate(@PathVariable long doctorId, @RequestBody DoctorScheduleTemplateDto doctorScheduleTemplateDto) {
         DoctorScheduleTemplate template = doctorScheduleTemplateService.updateDoctorScheduleTemplate(doctorId, doctorScheduleTemplateDto);
         return ResponseEntity.ok(doctorScheduleTemplateMapper.mapToDto(template));

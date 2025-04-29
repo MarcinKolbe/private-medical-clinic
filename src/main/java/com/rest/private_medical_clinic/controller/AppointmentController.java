@@ -8,6 +8,7 @@ import com.rest.private_medical_clinic.service.AppointmentService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -34,7 +35,7 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentMapper.mapToDto(appointment));
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AppointmentDto> createAppointment(@RequestBody AppointmentDto appointmentDto) {
         Appointment appointment = appointmentMapper.mapToEntity(appointmentDto);
         return ResponseEntity.ok(appointmentMapper.mapToDto(appointmentService.createAppointment(appointment)));
@@ -46,7 +47,7 @@ public class AppointmentController {
         return ResponseEntity.noContent().build();
     }
 
-    @PutMapping("/{appointmentId}/reschedule")
+    @PutMapping(value = "/{appointmentId}/reschedule", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AppointmentDto> rescheduleAppointment(@PathVariable long appointmentId, @RequestBody AppointmentDto appointmentDto) {
         Appointment appointment = appointmentService.rescheduleAppointment(appointmentId, appointmentDto);
         return ResponseEntity.ok(appointmentMapper.mapToDto(appointment));
@@ -76,7 +77,7 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentMapper.mapToDtoList(appointments));
     }
 
-    @PutMapping("/{appointmentId}/add-diagnosis")
+    @PutMapping(value = "/{appointmentId}/add-diagnosis", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> addDiagnosisToAppointment(@PathVariable long appointmentId, @RequestBody DiagnosisDto diagnosisDto) {
         appointmentService.addDiagnosisToAppointment(appointmentId, diagnosisDto);
         return ResponseEntity.noContent().build();
