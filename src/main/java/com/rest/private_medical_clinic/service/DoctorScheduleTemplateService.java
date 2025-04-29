@@ -5,6 +5,7 @@ import com.rest.private_medical_clinic.domain.DoctorScheduleTemplate;
 import com.rest.private_medical_clinic.domain.dto.DoctorScheduleTemplateDto;
 import com.rest.private_medical_clinic.exeption.DoctorScheduleTemplateException;
 import com.rest.private_medical_clinic.repository.DoctorScheduleTemplateRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -25,6 +26,7 @@ public class DoctorScheduleTemplateService {
         return repository.findById(id).orElseThrow(() -> new DoctorScheduleTemplateException(id));
     }
 
+    @Transactional
     public DoctorScheduleTemplate createDoctorScheduleTemplate(long doctorId, DoctorScheduleTemplateDto doctorScheduleTemplateRequest) {
         Doctor doctor = doctorService.getDoctor(doctorId);
 
@@ -40,6 +42,7 @@ public class DoctorScheduleTemplateService {
         return doctorScheduleTemplate;
     }
 
+    @Transactional
     public void deleteDoctorScheduleTemplateById(Long id) {
         repository.deleteById(id);
     }
@@ -49,6 +52,7 @@ public class DoctorScheduleTemplateService {
         return repository.findByDoctor_Id(doctor.getId());
     }
 
+    @Transactional
     public DoctorScheduleTemplate updateDoctorScheduleTemplate(long doctorId, DoctorScheduleTemplateDto doctorScheduleTemplateRequest) {
         doctorService.getDoctor(doctorId);
 
@@ -64,6 +68,4 @@ public class DoctorScheduleTemplateService {
         repository.save(doctorScheduleTemplate);
         return doctorScheduleTemplate;
     }
-
-
 }

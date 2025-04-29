@@ -2,6 +2,7 @@ package com.rest.private_medical_clinic.service;
 
 import com.rest.private_medical_clinic.domain.Doctor;
 import com.rest.private_medical_clinic.repository.DoctorRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -21,10 +22,12 @@ public class DoctorService {
         return doctorRepository.findById(doctorId).orElseThrow(() -> new RuntimeException("Doctor not found"));
     }
 
+    @Transactional
     public Doctor saveDoctor(Doctor doctor) {
         return doctorRepository.save(doctor);
     }
 
+    @Transactional
     public Doctor updateDoctor(Doctor doctor) {
         Doctor updatedDoctor = getDoctor(doctor.getId());
         updatedDoctor.setFirstname(doctor.getFirstname());
@@ -33,6 +36,7 @@ public class DoctorService {
         return doctorRepository.save(updatedDoctor);
     }
 
+    @Transactional
     public void deleteDoctor(long doctorId) {
         Doctor doctor = getDoctor(doctorId);
         doctorRepository.deleteById(doctor.getId());

@@ -61,8 +61,7 @@ public class AppointmentService {
 
     @Transactional
     public void cancelAppointment(Long appointmentId) {
-        Appointment appointment = appointmentRepository.findById(appointmentId)
-                .orElseThrow(() -> new AppointmentNotFoundException(appointmentId));
+        Appointment appointment = getAppointmentById(appointmentId);
 
         if (appointment.getStatus() == AppointmentStatus.CANCELLED) {
             throw new IllegalStateException("Appointment is already cancelled.");
@@ -80,8 +79,7 @@ public class AppointmentService {
 
     @Transactional
     public Appointment rescheduleAppointment(long appointmentId, AppointmentDto appointmentRequest) {
-        Appointment appointment = appointmentRepository.findById(appointmentId)
-                .orElseThrow(() -> new AppointmentNotFoundException(appointmentId));
+        Appointment appointment = getAppointmentById(appointmentId);
 
         appointmentValidator.validateAvailability(appointment.getId(), appointmentRequest.getDate(), appointmentRequest.getTime());
 
@@ -98,6 +96,7 @@ public class AppointmentService {
         return savedAppointment;
     }
 
+    @Transactional
     public void deleteAppointmentById(long appointmentId) {
         Appointment appointment = getAppointmentById(appointmentId);
         appointmentRepository.delete(appointment);

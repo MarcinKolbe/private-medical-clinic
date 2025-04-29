@@ -6,6 +6,7 @@ import com.rest.private_medical_clinic.domain.Doctor;
 import com.rest.private_medical_clinic.domain.Patient;
 import com.rest.private_medical_clinic.exeption.DiagnosisNotFoundException;
 import com.rest.private_medical_clinic.repository.DiagnosisRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -29,10 +30,12 @@ public class DiagnosisService {
                 () -> new DiagnosisNotFoundException(diagnosisId));
     }
 
+    @Transactional
     public Diagnosis addDiagnosis(Diagnosis diagnosis) {
         return diagnosisRepository.save(diagnosis);
     }
 
+    @Transactional
     public void deleteDiagnosisById(long diagnosisId) {
         Diagnosis diagnosis = getDiagnosisById(diagnosisId);
         diagnosisRepository.delete(diagnosis);

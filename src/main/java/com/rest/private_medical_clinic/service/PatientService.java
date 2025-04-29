@@ -3,6 +3,7 @@ package com.rest.private_medical_clinic.service;
 import com.rest.private_medical_clinic.domain.Patient;
 import com.rest.private_medical_clinic.exeption.PatientNotFoundException;
 import com.rest.private_medical_clinic.repository.PatientRepository;
+import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
@@ -22,10 +23,12 @@ public class PatientService {
         return patientRepository.findById(id).orElseThrow(() -> new PatientNotFoundException(id));
     }
 
+    @Transactional
     public Patient savePatient(Patient patient) {
         return patientRepository.save(patient);
     }
 
+    @Transactional
     public void deletePatient(Long id) {
         Patient patient = patientRepository.findById(id).orElseThrow(() -> new PatientNotFoundException(id));
         patientRepository.deleteById(patient.getId());

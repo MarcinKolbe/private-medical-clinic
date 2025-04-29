@@ -25,25 +25,27 @@ public class DoctorAvailabilityService {
     private final DoctorAvailabilityRepository availabilityRepo;
     private final DoctorScheduleTemplateRepository scheduleTemplateRepo;
 
-    public List<DoctorAvailability> findAllAvailabilityForAllDoctors() {
+    public List<DoctorAvailability> getAllAvailabilityForAllDoctors() {
         return availabilityRepo.findAll();
     }
 
-    public DoctorAvailability findDoctorAvailabilityById(Long id) {
+    public DoctorAvailability getDoctorAvailabilityById(Long id) {
         return availabilityRepo.findById(id).orElseThrow(() -> new DoctorAvailabilityException(id));
     }
 
-    public List<DoctorAvailability> findDoctorAvailabilityByDoctorId(Long doctorId) {
+    public List<DoctorAvailability> getDoctorAvailabilityByDoctorId(Long doctorId) {
         Doctor doctor = doctorRepo.findById(doctorId).orElseThrow(() -> new DoctorNotFoundException(doctorId));
         return availabilityRepo.findByDoctorId(doctor.getId());
     }
 
+    @Transactional
     public DoctorAvailability saveDoctorAvailability(DoctorAvailability doctorAvailability) {
         return availabilityRepo.save(doctorAvailability);
     }
 
+    @Transactional
     public DoctorAvailability updateDoctorAvailability(DoctorAvailability doctorAvailability) {
-        DoctorAvailability availability = findDoctorAvailabilityById(doctorAvailability.getId());
+        DoctorAvailability availability = getDoctorAvailabilityById(doctorAvailability.getId());
         availability.setDate(doctorAvailability.getDate());
         availability.setStartTime(doctorAvailability.getStartTime());
         availability.setEndTime(doctorAvailability.getEndTime());
@@ -51,6 +53,7 @@ public class DoctorAvailabilityService {
         return availabilityRepo.save(availability);
     }
 
+    @Transactional
     public void deleteDoctorAvailability(Long id) {
         DoctorAvailability doctorAvailability = availabilityRepo.findById(id).orElseThrow(() -> new RuntimeException("No Doctor Availability found with id: " + id));
         availabilityRepo.delete(doctorAvailability);
@@ -82,7 +85,7 @@ public class DoctorAvailabilityService {
 
     @Transactional
     public void generateDoctorAvailabilityForNext7Days(Doctor doctor) {
-        List<DoctorScheduleTemplate> templates = scheduleTemplateRepo.findByDoctor(doctor);
+        List<DoctorScheduleTemplate> templates = scheduleTemplateRepo.findByDoctor_Id(doctor.getId());
 
         LocalDate today = LocalDate.now();
         LocalDate endDate = today.plusDays(7);
