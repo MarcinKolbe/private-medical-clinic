@@ -19,6 +19,10 @@ public class Review {
     @Column(name = "REVIWE_ID")
     private long id;
 
+    @OneToOne
+    @JoinColumn(name = "APPOINTMENT_ID")
+    private Appointment appointment;
+
     @ManyToOne
     @JoinColumn(name = "DOCTOR_ID")
     private Doctor doctor;

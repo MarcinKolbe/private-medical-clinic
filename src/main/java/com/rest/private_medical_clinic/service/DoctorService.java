@@ -1,6 +1,7 @@
 package com.rest.private_medical_clinic.service;
 
 import com.rest.private_medical_clinic.domain.Doctor;
+import com.rest.private_medical_clinic.exeption.DoctorNotFoundException;
 import com.rest.private_medical_clinic.repository.DoctorRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -19,7 +20,7 @@ public class DoctorService {
     }
 
     public Doctor getDoctor(long doctorId) {
-        return doctorRepository.findById(doctorId).orElseThrow(() -> new RuntimeException("Doctor not found"));
+        return doctorRepository.findById(doctorId).orElseThrow(() -> new DoctorNotFoundException(doctorId));
     }
 
     @Transactional

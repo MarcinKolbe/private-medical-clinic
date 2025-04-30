@@ -18,7 +18,7 @@ public class DiagnosisValidator {
         if (appointment.getStatus().equals(AppointmentStatus.CANCELLED)) {
             throw new IllegalStateException("Cannot add diagnosis to cancelled appointment.");
         } else if (appointment.getStatus().equals(AppointmentStatus.COMPLETED) && appointment.getDiagnosis() != null) {
-            throw new IllegalStateException("Appointment has been completed and has a diagnosis.");
+            throw new IllegalStateException("Cannot add diagnosis. Appointment already has a diagnosis.");
         }
     }
 }
