@@ -10,6 +10,7 @@ import com.rest.private_medical_clinic.enums.AppointmentStatus;
 import com.rest.private_medical_clinic.exeption.AppointmentNotFoundException;
 import com.rest.private_medical_clinic.repository.AppointmentRepository;
 import com.rest.private_medical_clinic.validator.AppointmentValidator;
+import com.rest.private_medical_clinic.validator.DiagnosisValidator;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -26,11 +27,16 @@ public class AppointmentService {
     private final DoctorService doctorService;
     private final PatientService patientService;
     private final AppointmentValidator appointmentValidator;
+    private final DiagnosisValidator diagnosisValidator;
     private final DoctorAvailabilityService doctorAvailabilityService;
     private final DiagnosisService diagnosisService;
 
     public List<Appointment> getAllAppointments() {
         return appointmentRepository.findAll();
+    }
+
+    public List<Appointment> getAppointmentsByStatus(String status) {
+        return appointmentRepository.findAllByStatus(AppointmentStatus.valueOf(status));
     }
 
     public Appointment getAppointmentById(long appointmentId) {
@@ -118,9 +124,8 @@ public class AppointmentService {
     public void addDiagnosisToAppointment(long appointmentId, DiagnosisDto diagnosisRequest) {
         Appointment appointment = getAppointmentById(appointmentId);
 
-        if (appointment.getStatus() == AppointmentStatus.CANCELLED) {
-            throw new IllegalStateException("Cannot add diagnosis to cancelled appointment.");
-        }
+        diagnosisValidator.validateDiagnosis(appointmentId);
+
         Diagnosis diagnosis = new Diagnosis();
         diagnosis.setAppointment(appointment);
         diagnosis.setDescription(diagnosisRequest.getDescription());

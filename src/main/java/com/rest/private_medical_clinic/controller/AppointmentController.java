@@ -6,10 +6,12 @@ import com.rest.private_medical_clinic.domain.dto.DiagnosisDto;
 import com.rest.private_medical_clinic.mapper.AppointmentMapper;
 import com.rest.private_medical_clinic.service.AppointmentService;
 import io.swagger.v3.oas.annotations.parameters.RequestBody;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
 import java.time.LocalDate;
@@ -17,6 +19,7 @@ import java.util.List;
 
 @RestController
 @RequestMapping("/v1/appointments")
+@Validated
 @RequiredArgsConstructor
 public class AppointmentController {
 
@@ -24,8 +27,10 @@ public class AppointmentController {
     private final AppointmentMapper appointmentMapper;
 
     @GetMapping
-    public ResponseEntity<List<AppointmentDto>> getAllAppointments() {
-        List<Appointment> appointments = appointmentService.getAllAppointments();
+    public ResponseEntity<List<AppointmentDto>> getAllAppointments(@RequestParam(required = false) String status) {
+        List<Appointment> appointments = (status == null)
+                ? appointmentService.getAllAppointments()
+                : appointmentService.getAppointmentsByStatus(status);
         return ResponseEntity.ok(appointmentMapper.mapToDtoList(appointments));
     }
 
@@ -36,7 +41,7 @@ public class AppointmentController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AppointmentDto> createAppointment(@RequestBody AppointmentDto appointmentDto) {
+    public ResponseEntity<AppointmentDto> createAppointment(@Valid @RequestBody AppointmentDto appointmentDto) {
         Appointment appointment = appointmentMapper.mapToEntity(appointmentDto);
         return ResponseEntity.ok(appointmentMapper.mapToDto(appointmentService.createAppointment(appointment)));
     }
@@ -48,7 +53,7 @@ public class AppointmentController {
     }
 
     @PutMapping(value = "/{appointmentId}/reschedule", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AppointmentDto> rescheduleAppointment(@PathVariable long appointmentId, @RequestBody AppointmentDto appointmentDto) {
+    public ResponseEntity<AppointmentDto> rescheduleAppointment(@PathVariable long appointmentId, @Valid @RequestBody AppointmentDto appointmentDto) {
         Appointment appointment = appointmentService.rescheduleAppointment(appointmentId, appointmentDto);
         return ResponseEntity.ok(appointmentMapper.mapToDto(appointment));
     }
@@ -78,7 +83,7 @@ public class AppointmentController {
     }
 
     @PutMapping(value = "/{appointmentId}/add-diagnosis", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<Void> addDiagnosisToAppointment(@PathVariable long appointmentId, @RequestBody DiagnosisDto diagnosisDto) {
+    public ResponseEntity<Void> addDiagnosisToAppointment(@PathVariable long appointmentId, @Valid @RequestBody DiagnosisDto diagnosisDto) {
         appointmentService.addDiagnosisToAppointment(appointmentId, diagnosisDto);
         return ResponseEntity.noContent().build();
     }

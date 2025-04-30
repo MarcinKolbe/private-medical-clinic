@@ -1,6 +1,7 @@
 package com.rest.private_medical_clinic.repository;
 
 import com.rest.private_medical_clinic.domain.Appointment;
+import com.rest.private_medical_clinic.enums.AppointmentStatus;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 
@@ -18,5 +19,7 @@ public interface AppointmentRepository extends CrudRepository<Appointment, Long>
     List<Appointment> findAllByPatientIdOrderByDateDesc (long patientId);
 
     List<Appointment> findAllByDateOrderByDateDesc (LocalDate date);
+
+    List<Appointment> findAllByStatus (AppointmentStatus status);
 
 }
