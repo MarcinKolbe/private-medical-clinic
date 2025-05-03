@@ -30,7 +30,7 @@ public class Patient {
     @Column(name = "PESEL", nullable = false)
     private String pesel;
 
-    @Column(name = "BIRTH_DATE")
+    @Column(name = "BIRTH_DATE", nullable = false)
     private LocalDate birthDate;
 
     @OneToOne

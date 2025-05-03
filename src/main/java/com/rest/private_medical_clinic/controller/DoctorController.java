@@ -1,24 +1,22 @@
 package com.rest.private_medical_clinic.controller;
 
 import com.rest.private_medical_clinic.domain.Doctor;
-import com.rest.private_medical_clinic.domain.DoctorAvailability;
-import com.rest.private_medical_clinic.domain.dto.DoctorAvailabilityDto;
 import com.rest.private_medical_clinic.domain.dto.DoctorDto;
-import com.rest.private_medical_clinic.mapper.DoctorAvailabilityMapper;
+import com.rest.private_medical_clinic.domain.dto.DoctorRegistrationDto;
 import com.rest.private_medical_clinic.mapper.DoctorMapper;
-import com.rest.private_medical_clinic.service.DoctorAvailabilityService;
 import com.rest.private_medical_clinic.service.DoctorService;
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.validation.annotation.Validated;
+import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 
 @RestController
 @RequestMapping("/v1/doctors")
+@Validated
 @RequiredArgsConstructor
 public class DoctorController {
 
@@ -37,9 +35,21 @@ public class DoctorController {
         return ResponseEntity.ok(doctorMapper.mapToDto(doctor));
     }
 
+    @PostMapping
+    public ResponseEntity<Void> registerDoctor(@Valid @RequestBody DoctorRegistrationDto doctorRegistrationDto) {
+        doctorService.registerDoctor(doctorRegistrationDto);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
+    }
 
+    @PutMapping
+    public ResponseEntity<DoctorDto> updateDoctor(@Valid @RequestBody DoctorDto doctorDto) {
+        Doctor doctor = doctorService.updateDoctor(doctorDto);
+        return ResponseEntity.ok(doctorMapper.mapToDto(doctor));
+    }
 
-
-
-
+    @DeleteMapping("/{doctorId}")
+    public ResponseEntity<Void> deleteDoctor(@PathVariable long doctorId) {
+        doctorService.deleteDoctor(doctorId);
+        return ResponseEntity.noContent().build();
+    }
 }

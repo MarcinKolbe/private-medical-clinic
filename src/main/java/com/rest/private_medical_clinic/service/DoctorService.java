@@ -1,12 +1,18 @@
 package com.rest.private_medical_clinic.service;
 
 import com.rest.private_medical_clinic.domain.Doctor;
+import com.rest.private_medical_clinic.domain.User;
+import com.rest.private_medical_clinic.domain.dto.DoctorDto;
+import com.rest.private_medical_clinic.domain.dto.DoctorRegistrationDto;
+import com.rest.private_medical_clinic.enums.UserRole;
 import com.rest.private_medical_clinic.exception.DoctorNotFoundException;
 import com.rest.private_medical_clinic.repository.DoctorRepository;
+import com.rest.private_medical_clinic.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalDate;
 import java.util.List;
 
 @Service
@@ -14,6 +20,7 @@ import java.util.List;
 public class DoctorService {
 
     private final DoctorRepository doctorRepository;
+    private final UserRepository userRepository;
 
     public List<Doctor> getAllDoctors() {
         return doctorRepository.findAll();
@@ -24,16 +31,30 @@ public class DoctorService {
     }
 
     @Transactional
-    public Doctor addDoctor(Doctor doctor) {
-        return doctorRepository.save(doctor);
+    public void registerDoctor(DoctorRegistrationDto doctorRegistrationDto) {
+        User user = new User();
+        user.setUsername(doctorRegistrationDto.getUsername());
+        user.setPassword(doctorRegistrationDto.getPassword());
+        user.setMail(doctorRegistrationDto.getMail());
+        user.setUserRole(UserRole.DOCTOR);
+        user.setCreated_at(LocalDate.now());
+        user.setBlocked(false);
+
+        Doctor doctor = new Doctor();
+        doctor.setFirstname(doctorRegistrationDto.getFirstName());
+        doctor.setLastname(doctorRegistrationDto.getLastName());
+        doctor.setSpecialization(doctorRegistrationDto.getSpecialization());
+        doctor.setUser(user);
+        user.setDoctor(doctor);
+        userRepository.save(user);
     }
 
     @Transactional
-    public Doctor updateDoctor(Doctor doctor) {
-        Doctor updatedDoctor = getDoctor(doctor.getId());
-        updatedDoctor.setFirstname(doctor.getFirstname());
-        updatedDoctor.setLastname(doctor.getLastname());
-        updatedDoctor.setSpecialization(doctor.getSpecialization());
+    public Doctor updateDoctor(DoctorDto doctorDto) {
+        Doctor updatedDoctor = getDoctor(doctorDto.getId());
+        updatedDoctor.setFirstname(doctorDto.getFirstname());
+        updatedDoctor.setLastname(doctorDto.getLastname());
+        updatedDoctor.setSpecialization(doctorDto.getSpecialization());
         return doctorRepository.save(updatedDoctor);
     }
 
