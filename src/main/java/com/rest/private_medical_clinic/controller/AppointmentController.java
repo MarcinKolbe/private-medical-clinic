@@ -9,6 +9,7 @@ import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.format.annotation.DateTimeFormat;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -42,8 +43,8 @@ public class AppointmentController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AppointmentDto> createAppointment(@Valid @RequestBody AppointmentDto appointmentDto) {
-        Appointment appointment = appointmentMapper.mapToEntity(appointmentDto);
-        return ResponseEntity.ok(appointmentMapper.mapToDto(appointmentService.createAppointment(appointment)));
+        Appointment appointment = appointmentService.createAppointment(appointmentDto);
+        return ResponseEntity.status(HttpStatus.CREATED).body(appointmentMapper.mapToDto(appointment));
     }
 
     @PutMapping("/{appointmentId}/cancel")

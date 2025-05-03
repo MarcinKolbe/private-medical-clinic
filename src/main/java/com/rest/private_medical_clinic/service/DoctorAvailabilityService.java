@@ -3,8 +3,9 @@ package com.rest.private_medical_clinic.service;
 import com.rest.private_medical_clinic.domain.Doctor;
 import com.rest.private_medical_clinic.domain.DoctorAvailability;
 import com.rest.private_medical_clinic.domain.DoctorScheduleTemplate;
-import com.rest.private_medical_clinic.exeption.DoctorAvailabilityException;
-import com.rest.private_medical_clinic.exeption.DoctorNotFoundException;
+import com.rest.private_medical_clinic.domain.dto.DoctorAvailabilityDto;
+import com.rest.private_medical_clinic.exception.DoctorAvailabilityException;
+import com.rest.private_medical_clinic.exception.DoctorNotFoundException;
 import com.rest.private_medical_clinic.repository.DoctorAvailabilityRepository;
 import com.rest.private_medical_clinic.repository.DoctorRepository;
 import com.rest.private_medical_clinic.repository.DoctorScheduleTemplateRepository;
@@ -21,7 +22,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DoctorAvailabilityService {
 
-    private final DoctorRepository doctorRepo;
+    private final DoctorService doctorService;
     private final DoctorAvailabilityRepository availabilityRepo;
     private final DoctorScheduleTemplateRepository scheduleTemplateRepo;
 
@@ -34,17 +35,25 @@ public class DoctorAvailabilityService {
     }
 
     public List<DoctorAvailability> getDoctorAvailabilityByDoctorId(Long doctorId) {
-        Doctor doctor = doctorRepo.findById(doctorId).orElseThrow(() -> new DoctorNotFoundException(doctorId));
+        Doctor doctor = doctorService.getDoctor(doctorId);
         return availabilityRepo.findByDoctorId(doctor.getId());
     }
 
     @Transactional
-    public DoctorAvailability saveDoctorAvailability(DoctorAvailability doctorAvailability) {
-        return availabilityRepo.save(doctorAvailability);
+    public DoctorAvailability addDoctorAvailability(DoctorAvailabilityDto doctorAvailabilityRequest) {
+        Doctor doctor = doctorService.getDoctor(doctorAvailabilityRequest.getDoctorId());
+        DoctorAvailability availability = new DoctorAvailability();
+        availability.setDoctor(doctor);
+        availability.setDate(doctorAvailabilityRequest.getDate());
+        availability.setStartTime(doctorAvailabilityRequest.getStartTime());
+        availability.setEndTime(doctorAvailabilityRequest.getEndTime());
+        availability.setAvailable(true);
+        availabilityRepo.save(availability);
+        return availability;
     }
 
     @Transactional
-    public DoctorAvailability updateDoctorAvailability(DoctorAvailability doctorAvailability) {
+    public DoctorAvailability updateDoctorAvailability(DoctorAvailabilityDto doctorAvailability) {
         DoctorAvailability availability = getDoctorAvailabilityById(doctorAvailability.getId());
         availability.setDate(doctorAvailability.getDate());
         availability.setStartTime(doctorAvailability.getStartTime());

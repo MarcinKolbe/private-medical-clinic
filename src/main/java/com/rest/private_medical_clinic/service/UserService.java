@@ -4,7 +4,7 @@ import com.rest.private_medical_clinic.domain.User;
 import com.rest.private_medical_clinic.domain.dto.PasswordResetDto;
 import com.rest.private_medical_clinic.domain.dto.UserDto;
 import com.rest.private_medical_clinic.enums.UserRole;
-import com.rest.private_medical_clinic.exeption.UserNotFoundException;
+import com.rest.private_medical_clinic.exception.UserNotFoundException;
 import com.rest.private_medical_clinic.repository.UserRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

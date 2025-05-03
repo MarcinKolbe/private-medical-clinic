@@ -3,7 +3,7 @@ package com.rest.private_medical_clinic.service;
 import com.rest.private_medical_clinic.domain.Doctor;
 import com.rest.private_medical_clinic.domain.DoctorScheduleTemplate;
 import com.rest.private_medical_clinic.domain.dto.DoctorScheduleTemplateDto;
-import com.rest.private_medical_clinic.exeption.DoctorScheduleTemplateException;
+import com.rest.private_medical_clinic.exception.DoctorScheduleTemplateException;
 import com.rest.private_medical_clinic.repository.DoctorScheduleTemplateRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

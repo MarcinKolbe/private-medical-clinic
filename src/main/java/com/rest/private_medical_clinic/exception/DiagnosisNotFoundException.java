@@ -1,4 +1,4 @@
-package com.rest.private_medical_clinic.exeption;
+package com.rest.private_medical_clinic.exception;
 
 public class DiagnosisNotFoundException extends RuntimeException {
 

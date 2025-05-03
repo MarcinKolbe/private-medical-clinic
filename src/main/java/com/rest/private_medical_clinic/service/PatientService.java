@@ -1,7 +1,7 @@
 package com.rest.private_medical_clinic.service;
 
 import com.rest.private_medical_clinic.domain.Patient;
-import com.rest.private_medical_clinic.exeption.PatientNotFoundException;
+import com.rest.private_medical_clinic.exception.PatientNotFoundException;
 import com.rest.private_medical_clinic.repository.PatientRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

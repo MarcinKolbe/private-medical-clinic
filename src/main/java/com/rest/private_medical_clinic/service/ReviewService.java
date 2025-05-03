@@ -5,7 +5,7 @@ import com.rest.private_medical_clinic.domain.Doctor;
 import com.rest.private_medical_clinic.domain.Patient;
 import com.rest.private_medical_clinic.domain.Review;
 import com.rest.private_medical_clinic.domain.dto.ReviewDto;
-import com.rest.private_medical_clinic.exeption.ReviewNotFoundException;
+import com.rest.private_medical_clinic.exception.ReviewNotFoundException;
 import com.rest.private_medical_clinic.repository.ReviewRepository;
 import com.rest.private_medical_clinic.validator.ReviewValidator;
 import jakarta.transaction.Transactional;

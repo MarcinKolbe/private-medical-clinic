@@ -1,7 +1,7 @@
 package com.rest.private_medical_clinic.service;
 
 import com.rest.private_medical_clinic.domain.Doctor;
-import com.rest.private_medical_clinic.exeption.DoctorNotFoundException;
+import com.rest.private_medical_clinic.exception.DoctorNotFoundException;
 import com.rest.private_medical_clinic.repository.DoctorRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -24,7 +24,7 @@ public class DoctorService {
     }
 
     @Transactional
-    public Doctor saveDoctor(Doctor doctor) {
+    public Doctor addDoctor(Doctor doctor) {
         return doctorRepository.save(doctor);
     }
 

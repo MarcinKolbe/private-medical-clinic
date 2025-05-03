@@ -4,7 +4,7 @@ import com.rest.private_medical_clinic.domain.Appointment;
 import com.rest.private_medical_clinic.domain.Diagnosis;
 import com.rest.private_medical_clinic.domain.Doctor;
 import com.rest.private_medical_clinic.domain.Patient;
-import com.rest.private_medical_clinic.exeption.DiagnosisNotFoundException;
+import com.rest.private_medical_clinic.exception.DiagnosisNotFoundException;
 import com.rest.private_medical_clinic.repository.DiagnosisRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;

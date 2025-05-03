@@ -4,6 +4,7 @@ import com.rest.private_medical_clinic.domain.Doctor;
 import com.rest.private_medical_clinic.domain.DoctorAvailability;
 import com.rest.private_medical_clinic.domain.dto.DoctorAvailabilityDto;
 import com.rest.private_medical_clinic.domain.dto.DoctorDto;
+import com.rest.private_medical_clinic.mapper.DoctorAvailabilityMapper;
 import com.rest.private_medical_clinic.mapper.DoctorMapper;
 import com.rest.private_medical_clinic.service.DoctorAvailabilityService;
 import com.rest.private_medical_clinic.service.DoctorService;
@@ -23,7 +24,6 @@ public class DoctorController {
 
     private final DoctorService doctorService;
     private final DoctorMapper doctorMapper;
-    private final DoctorAvailabilityService doctorAvailabilityService;
 
     @GetMapping
     public ResponseEntity<List<DoctorDto>> getAllDoctors() {
@@ -37,14 +37,7 @@ public class DoctorController {
         return ResponseEntity.ok(doctorMapper.mapToDto(doctor));
     }
 
-    @GetMapping("/{doctorId}/availability")
-    public List<DoctorAvailabilityDto> getDoctorAvailability(@PathVariable Long doctorId) {
-        List<DoctorAvailability> availableSlots = doctorAvailabilityService.getAvailableSlotsForDoctor(doctorId);
-        return availableSlots.stream()
-                .map(slot -> new DoctorAvailabilityDto(slot.getId(), slot.getDoctor().getId(),
-                        slot.getDate(), slot.getStartTime(), slot.getEndTime(), slot.isAvailable()))
-                .toList();
-    }
+
 
 
 

@@ -7,7 +7,7 @@ import com.rest.private_medical_clinic.domain.Patient;
 import com.rest.private_medical_clinic.domain.dto.AppointmentDto;
 import com.rest.private_medical_clinic.domain.dto.DiagnosisDto;
 import com.rest.private_medical_clinic.enums.AppointmentStatus;
-import com.rest.private_medical_clinic.exeption.AppointmentNotFoundException;
+import com.rest.private_medical_clinic.exception.AppointmentNotFoundException;
 import com.rest.private_medical_clinic.repository.AppointmentRepository;
 import com.rest.private_medical_clinic.validator.AppointmentValidator;
 import com.rest.private_medical_clinic.validator.DiagnosisValidator;
@@ -44,9 +44,9 @@ public class AppointmentService {
     }
 
     @Transactional
-    public Appointment createAppointment(Appointment appointmentRequest) {
-        Doctor doctor = doctorService.getDoctor(appointmentRequest.getDoctor().getId());
-        Patient patient = patientService.getPatient(appointmentRequest.getPatient().getId());
+    public Appointment createAppointment(AppointmentDto appointmentRequest) {
+        Doctor doctor = doctorService.getDoctor(appointmentRequest.getDoctorId());
+        Patient patient = patientService.getPatient(appointmentRequest.getPatientId());
 
         appointmentValidator.validateAvailability(doctor.getId(), appointmentRequest.getDate(), appointmentRequest.getTime());
 
