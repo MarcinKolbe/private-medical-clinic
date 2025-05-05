@@ -2,6 +2,7 @@ package com.rest.private_medical_clinic.controller;
 
 import com.rest.private_medical_clinic.domain.Appointment;
 import com.rest.private_medical_clinic.domain.dto.AppointmentDto;
+import com.rest.private_medical_clinic.domain.dto.AppointmentRegistrationDto;
 import com.rest.private_medical_clinic.domain.dto.DiagnosisDto;
 import com.rest.private_medical_clinic.mapper.AppointmentMapper;
 import com.rest.private_medical_clinic.service.AppointmentService;
@@ -42,8 +43,8 @@ public class AppointmentController {
     }
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AppointmentDto> createAppointment(@Valid @RequestBody AppointmentDto appointmentDto) {
-        Appointment appointment = appointmentService.createAppointment(appointmentDto);
+    public ResponseEntity<AppointmentDto> createAppointment(@Valid @RequestBody AppointmentRegistrationDto appointmentRegistrationDto) {
+        Appointment appointment = appointmentService.createAppointment(appointmentRegistrationDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(appointmentMapper.mapToDto(appointment));
     }
 

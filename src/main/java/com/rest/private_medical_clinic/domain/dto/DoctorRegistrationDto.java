@@ -12,7 +12,7 @@ public class DoctorRegistrationDto {
     private String username;
     private String password;
     private String mail;
-    private String firstName;
-    private String lastName;
+    private String firstname;
+    private String lastname;
     private String specialization;
 }

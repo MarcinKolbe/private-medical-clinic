@@ -34,7 +34,7 @@ public class DoctorAvailabilityController {
         return ResponseEntity.ok(doctorAvailabilityMapper.mapToDto(doctorAvailability));
     }
 
-    @GetMapping("/{doctorId}")
+    @GetMapping("/doctor/{doctorId}")
     public ResponseEntity<List<DoctorAvailabilityDto>> getDoctorAvailabilityByDoctorId(@PathVariable Long doctorId) {
         List<DoctorAvailability> doctorAvailabilities = doctorAvailabilityService.getDoctorAvailabilityByDoctorId(doctorId);
         return ResponseEntity.ok(doctorAvailabilityMapper.mapToDtoList(doctorAvailabilities));
@@ -46,10 +46,10 @@ public class DoctorAvailabilityController {
         return ResponseEntity.ok(doctorAvailabilityMapper.mapToDtoList(availableSlots));
     }
 
-    @PostMapping
-    public ResponseEntity<DoctorAvailabilityDto> addDoctorAvailability(@Valid @RequestBody DoctorAvailabilityDto doctorAvailabilityDto) {
-        DoctorAvailability doctorAvailability = doctorAvailabilityService.addDoctorAvailability(doctorAvailabilityDto);
-        return ResponseEntity.status(HttpStatus.CREATED).body(doctorAvailabilityMapper.mapToDto(doctorAvailability));
+    @PostMapping("/{doctorId}")
+    public ResponseEntity<Void> addDoctorAvailabilityForNext7Days(@PathVariable Long doctorId) {
+        doctorAvailabilityService.addDoctorAvailability(doctorId);
+        return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
     @PutMapping

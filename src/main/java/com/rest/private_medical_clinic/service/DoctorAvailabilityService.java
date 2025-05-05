@@ -6,6 +6,7 @@ import com.rest.private_medical_clinic.domain.DoctorScheduleTemplate;
 import com.rest.private_medical_clinic.domain.dto.DoctorAvailabilityDto;
 import com.rest.private_medical_clinic.exception.DoctorAvailabilityException;
 import com.rest.private_medical_clinic.exception.DoctorNotFoundException;
+import com.rest.private_medical_clinic.exception.DoctorScheduleTemplateException;
 import com.rest.private_medical_clinic.repository.DoctorAvailabilityRepository;
 import com.rest.private_medical_clinic.repository.DoctorRepository;
 import com.rest.private_medical_clinic.repository.DoctorScheduleTemplateRepository;
@@ -22,7 +23,7 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DoctorAvailabilityService {
 
-    private final DoctorService doctorService;
+    private final DoctorRepository doctorRepository;
     private final DoctorAvailabilityRepository availabilityRepo;
     private final DoctorScheduleTemplateRepository scheduleTemplateRepo;
 
@@ -35,21 +36,15 @@ public class DoctorAvailabilityService {
     }
 
     public List<DoctorAvailability> getDoctorAvailabilityByDoctorId(Long doctorId) {
-        Doctor doctor = doctorService.getDoctor(doctorId);
-        return availabilityRepo.findByDoctorId(doctor.getId());
+        Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(() -> new DoctorNotFoundException(doctorId));
+        return availabilityRepo.findAllByDoctorId(doctor.getId());
     }
 
     @Transactional
-    public DoctorAvailability addDoctorAvailability(DoctorAvailabilityDto doctorAvailabilityRequest) {
-        Doctor doctor = doctorService.getDoctor(doctorAvailabilityRequest.getDoctorId());
-        DoctorAvailability availability = new DoctorAvailability();
-        availability.setDoctor(doctor);
-        availability.setDate(doctorAvailabilityRequest.getDate());
-        availability.setStartTime(doctorAvailabilityRequest.getStartTime());
-        availability.setEndTime(doctorAvailabilityRequest.getEndTime());
-        availability.setAvailable(true);
-        availabilityRepo.save(availability);
-        return availability;
+    public void addDoctorAvailability(long doctorId) {
+        Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(
+                () -> new DoctorNotFoundException(doctorId));
+        generateDoctorAvailabilityForNext7Days(doctor);
     }
 
     @Transactional
@@ -116,6 +111,36 @@ public class DoctorAvailabilityService {
                         availabilityRepo.save(availability);
                         currentTime = currentTime.plusMinutes(30);
                     }
+                }
+            }
+        }
+    }
+
+    @Transactional
+    public void generateDoctorAvailabilityForSpecificTemplateForNext7Days(long templateId) {
+        DoctorScheduleTemplate template = scheduleTemplateRepo.findById(templateId).orElseThrow(
+                () -> new DoctorScheduleTemplateException(templateId));
+        Doctor doctor = doctorRepository.findById(template.getDoctor().getId()).orElseThrow(
+                () -> new DoctorNotFoundException(template.getDoctor().getId()));
+
+        LocalDate today = LocalDate.now();
+        LocalDate endDate = today.plusDays(7);
+
+        for (LocalDate date = today; !date.isAfter(endDate); date = date.plusDays(1)) {
+            DayOfWeek dayOfWeek = date.getDayOfWeek();
+
+            if (template.getDayOfWeek() == dayOfWeek) {
+                LocalTime currentTime = template.getStartTime();
+                while (currentTime.plusMinutes(30).isBefore(template.getEndTime())
+                        || currentTime.plusMinutes(30).equals(template.getEndTime())) {
+                    DoctorAvailability availability = new DoctorAvailability();
+                    availability.setDoctor(doctor);
+                    availability.setDate(date);
+                    availability.setStartTime(currentTime);
+                    availability.setEndTime(currentTime.plusMinutes(30));
+                    availability.setAvailable(true);
+                    availabilityRepo.save(availability);
+                    currentTime = currentTime.plusMinutes(30);
                 }
             }
         }

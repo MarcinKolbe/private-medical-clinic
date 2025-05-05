@@ -4,6 +4,7 @@ import com.rest.private_medical_clinic.domain.Doctor;
 import com.rest.private_medical_clinic.domain.DoctorScheduleTemplate;
 import com.rest.private_medical_clinic.domain.dto.DoctorScheduleTemplateDto;
 import com.rest.private_medical_clinic.exception.DoctorScheduleTemplateException;
+import com.rest.private_medical_clinic.repository.DoctorRepository;
 import com.rest.private_medical_clinic.repository.DoctorScheduleTemplateRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
@@ -16,7 +17,9 @@ import java.util.List;
 public class DoctorScheduleTemplateService {
 
     private final DoctorScheduleTemplateRepository repository;
-    private final DoctorService doctorService;
+    private final DoctorRepository doctorRepository;
+    private final DoctorAvailabilityService availabilityService;
+    private final DoctorAvailabilityService doctorAvailabilityService;
 
     public List<DoctorScheduleTemplate> getAllDoctorScheduleTemplate() {
         return repository.findAll();
@@ -28,7 +31,8 @@ public class DoctorScheduleTemplateService {
 
     @Transactional
     public DoctorScheduleTemplate createDoctorScheduleTemplate(long doctorId, DoctorScheduleTemplateDto doctorScheduleTemplateRequest) {
-        Doctor doctor = doctorService.getDoctor(doctorId);
+        Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(
+                () -> new DoctorScheduleTemplateException(doctorId));
 
         if (doctorScheduleTemplateRequest.getStartTime().isAfter(doctorScheduleTemplateRequest.getEndTime())) {
             throw new IllegalArgumentException("Start time must be before end time");
@@ -39,6 +43,7 @@ public class DoctorScheduleTemplateService {
         doctorScheduleTemplate.setStartTime(doctorScheduleTemplateRequest.getStartTime());
         doctorScheduleTemplate.setEndTime(doctorScheduleTemplateRequest.getEndTime());
         repository.save(doctorScheduleTemplate);
+        doctorAvailabilityService.generateDoctorAvailabilityForSpecificTemplateForNext7Days(doctorScheduleTemplate.getId());
         return doctorScheduleTemplate;
     }
 
@@ -48,13 +53,13 @@ public class DoctorScheduleTemplateService {
     }
 
     public List<DoctorScheduleTemplate> getDoctorScheduleTemplateByDoctorId(Long id) {
-        Doctor doctor = doctorService.getDoctor(id);
+        Doctor doctor = doctorRepository.findById(id).orElseThrow(() -> new DoctorScheduleTemplateException(id));
         return repository.findByDoctor_Id(doctor.getId());
     }
 
     @Transactional
     public DoctorScheduleTemplate updateDoctorScheduleTemplate(long doctorId, DoctorScheduleTemplateDto doctorScheduleTemplateRequest) {
-        doctorService.getDoctor(doctorId);
+        doctorRepository.findById(doctorId).orElseThrow(() -> new DoctorScheduleTemplateException(doctorId));
 
         if (doctorScheduleTemplateRequest.getStartTime().isAfter(doctorScheduleTemplateRequest.getEndTime())) {
             throw new IllegalArgumentException("Start time must be before end time");

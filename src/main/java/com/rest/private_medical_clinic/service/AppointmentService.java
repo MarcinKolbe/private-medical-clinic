@@ -5,10 +5,16 @@ import com.rest.private_medical_clinic.domain.Diagnosis;
 import com.rest.private_medical_clinic.domain.Doctor;
 import com.rest.private_medical_clinic.domain.Patient;
 import com.rest.private_medical_clinic.domain.dto.AppointmentDto;
+import com.rest.private_medical_clinic.domain.dto.AppointmentRegistrationDto;
 import com.rest.private_medical_clinic.domain.dto.DiagnosisDto;
 import com.rest.private_medical_clinic.enums.AppointmentStatus;
 import com.rest.private_medical_clinic.exception.AppointmentNotFoundException;
+import com.rest.private_medical_clinic.exception.DoctorNotFoundException;
+import com.rest.private_medical_clinic.exception.PatientNotFoundException;
 import com.rest.private_medical_clinic.repository.AppointmentRepository;
+import com.rest.private_medical_clinic.repository.DiagnosisRepository;
+import com.rest.private_medical_clinic.repository.DoctorRepository;
+import com.rest.private_medical_clinic.repository.PatientRepository;
 import com.rest.private_medical_clinic.validator.AppointmentValidator;
 import com.rest.private_medical_clinic.validator.DiagnosisValidator;
 import jakarta.transaction.Transactional;
@@ -24,12 +30,12 @@ import java.util.List;
 public class AppointmentService {
 
     private final AppointmentRepository appointmentRepository;
-    private final DoctorService doctorService;
-    private final PatientService patientService;
+    private final DoctorRepository doctorRepository;
+    private final PatientRepository patientRepository;
     private final AppointmentValidator appointmentValidator;
     private final DiagnosisValidator diagnosisValidator;
     private final DoctorAvailabilityService doctorAvailabilityService;
-    private final DiagnosisService diagnosisService;
+    private final DiagnosisRepository diagnosisRepository;
 
     public List<Appointment> getAllAppointments() {
         return appointmentRepository.findAll();
@@ -44,23 +50,25 @@ public class AppointmentService {
     }
 
     @Transactional
-    public Appointment createAppointment(AppointmentDto appointmentRequest) {
-        Doctor doctor = doctorService.getDoctor(appointmentRequest.getDoctorId());
-        Patient patient = patientService.getPatient(appointmentRequest.getPatientId());
+    public Appointment createAppointment(AppointmentRegistrationDto appointmentRegistrationDto) {
+        Doctor doctor = doctorRepository.findById(appointmentRegistrationDto.getDoctorId()).orElseThrow(
+                () -> new DoctorNotFoundException(appointmentRegistrationDto.getDoctorId()));
+        Patient patient = patientRepository.findById(appointmentRegistrationDto.getPatientId()).orElseThrow(
+                () -> new PatientNotFoundException(appointmentRegistrationDto.getPatientId()));
 
-        appointmentValidator.validateAvailability(doctor.getId(), appointmentRequest.getDate(), appointmentRequest.getTime());
+        appointmentValidator.validateAvailability(doctor.getId(), appointmentRegistrationDto.getDate(), appointmentRegistrationDto.getTime());
 
         Appointment appointment = new Appointment();
         appointment.setDoctor(doctor);
         appointment.setPatient(patient);
-        appointment.setDate(appointmentRequest.getDate());
-        appointment.setTime(appointmentRequest.getTime());
+        appointment.setDate(appointmentRegistrationDto.getDate());
+        appointment.setTime(appointmentRegistrationDto.getTime());
         appointment.setStatus(AppointmentStatus.SCHEDULED);
-        appointment.setNotes(appointmentRequest.getNotes());
+        appointment.setNotes(appointmentRegistrationDto.getNotes());
 
         Appointment savedAppointment = appointmentRepository.save(appointment);
 
-        doctorAvailabilityService.markSlotAsUnavailable(doctor.getId(), appointmentRequest.getDate(), appointmentRequest.getTime());
+        doctorAvailabilityService.markSlotAsUnavailable(doctor.getId(), appointmentRegistrationDto.getDate(), appointmentRegistrationDto.getTime());
 
         return savedAppointment;
     }
@@ -131,7 +139,7 @@ public class AppointmentService {
         diagnosis.setDescription(diagnosisRequest.getDescription());
         diagnosis.setRecommendation(diagnosisRequest.getRecommendations());
         diagnosis.setCreatedAt(LocalDateTime.now());
-        diagnosisService.addDiagnosis(diagnosis);
+        diagnosisRepository.save(diagnosis);
 
         appointment.setDiagnosis(diagnosis);
         appointment.setStatus(AppointmentStatus.COMPLETED);

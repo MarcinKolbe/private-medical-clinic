@@ -3,22 +3,24 @@ package com.rest.private_medical_clinic.validator;
 import com.rest.private_medical_clinic.domain.Appointment;
 import com.rest.private_medical_clinic.domain.dto.ReviewDto;
 import com.rest.private_medical_clinic.enums.AppointmentStatus;
-import com.rest.private_medical_clinic.service.AppointmentService;
+import com.rest.private_medical_clinic.exception.AppointmentNotFoundException;
+import com.rest.private_medical_clinic.repository.AppointmentRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class ReviewValidator {
 
     private final Logger LOGGER = LoggerFactory.getLogger(ReviewValidator.class);
-    private final AppointmentService appointmentService;
+    private final AppointmentRepository appointmentRepository;
 
     public void validateReview(ReviewDto reviewDto) {
 
-        Appointment appointment = appointmentService.getAppointmentById(reviewDto.getAppointmentId());
+        Appointment appointment = appointmentRepository.findById(reviewDto.getAppointmentId()).orElseThrow(
+                () -> new AppointmentNotFoundException(reviewDto.getAppointmentId()));
 
         if (appointment.getStatus() != AppointmentStatus.COMPLETED) {
             LOGGER.warn("User {} tried to review appointment {} which is not completed",

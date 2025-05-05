@@ -23,7 +23,7 @@ public class PatientMapper {
     private final UserService userService;
 
     public PatientDto mapToDto(Patient patient) {
-        return new PatientDto(patient.getId(), patient.getFirstName(), patient.getLastName(),
+        return new PatientDto(patient.getId(), patient.getFirstname(), patient.getLastname(),
                 patient.getPhoneNumber(), patient.getPesel(), patient.getBirthDate(), patient.getUser().getId(),
                 patient.getAppointmentList().stream().map(Appointment::getId).toList(),
                 patient.getReviewList().stream().map(Review::getId).toList());
@@ -42,8 +42,8 @@ public class PatientMapper {
 
         Patient patient = new Patient();
         patient.setId(patientDto.getId());
-        patient.setFirstName(patientDto.getFirstName());
-        patient.setLastName(patientDto.getLastName());
+        patient.setFirstname(patientDto.getFirstname());
+        patient.setLastname(patientDto.getLastname());
         patient.setPhoneNumber(patientDto.getPhoneNumber());
         patient.setPesel(patientDto.getPesel());
         patient.setBirthDate(patientDto.getBirthDate());

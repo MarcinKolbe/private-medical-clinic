@@ -14,8 +14,8 @@ public class PatientRegistrationDto {
     private String username;
     private String password;
     private String mail;
-    private String firstName;
-    private String lastName;
+    private String firstname;
+    private String lastname;
     private int phone;
     private String pesel;
     private LocalDate birthDate;

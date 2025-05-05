@@ -13,8 +13,8 @@ import java.util.List;
 public class PatientDto {
 
     private long id;
-    private String firstName;
-    private String lastName;
+    private String firstname;
+    private String lastname;
     private int phoneNumber;
     private String pesel;
     private LocalDate birthDate;

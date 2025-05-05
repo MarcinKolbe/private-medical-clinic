@@ -19,10 +19,10 @@ public class Patient {
     private long id;
 
     @Column(name = "FIRSTNAME", nullable = false)
-    private String firstName;
+    private String firstname;
 
     @Column(name = "LASTNAME", nullable = false)
-    private String lastName;
+    private String lastname;
 
     @Column(name = "PHONE_NUMBER", nullable = false)
     private int phoneNumber;

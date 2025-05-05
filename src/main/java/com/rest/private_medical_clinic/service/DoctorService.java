@@ -41,8 +41,8 @@ public class DoctorService {
         user.setBlocked(false);
 
         Doctor doctor = new Doctor();
-        doctor.setFirstname(doctorRegistrationDto.getFirstName());
-        doctor.setLastname(doctorRegistrationDto.getLastName());
+        doctor.setFirstname(doctorRegistrationDto.getFirstname());
+        doctor.setLastname(doctorRegistrationDto.getLastname());
         doctor.setSpecialization(doctorRegistrationDto.getSpecialization());
         doctor.setUser(user);
         user.setDoctor(doctor);
@@ -52,9 +52,15 @@ public class DoctorService {
     @Transactional
     public Doctor updateDoctor(DoctorDto doctorDto) {
         Doctor updatedDoctor = getDoctor(doctorDto.getId());
-        updatedDoctor.setFirstname(doctorDto.getFirstname());
-        updatedDoctor.setLastname(doctorDto.getLastname());
-        updatedDoctor.setSpecialization(doctorDto.getSpecialization());
+        if (doctorDto.getFirstname() != null) {
+            updatedDoctor.setFirstname(doctorDto.getFirstname());
+        }
+        if (doctorDto.getLastname() != null) {
+            updatedDoctor.setLastname(doctorDto.getLastname());
+        }
+        if (doctorDto.getSpecialization() != null) {
+            updatedDoctor.setSpecialization(doctorDto.getSpecialization());
+        }
         return doctorRepository.save(updatedDoctor);
     }
 

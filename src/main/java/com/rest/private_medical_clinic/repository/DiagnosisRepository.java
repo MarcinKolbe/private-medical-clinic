@@ -16,5 +16,5 @@ public interface DiagnosisRepository extends CrudRepository<Diagnosis, Long> {
 
     List<Diagnosis> findByAppointment_DoctorId(Long id);
 
-    Diagnosis findByAppointment_appointmentId(Long id);
+    Diagnosis findByAppointment_Id(long appointmentId);
 }

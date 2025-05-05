@@ -15,7 +15,7 @@ public interface DoctorAvailabilityRepository extends CrudRepository<DoctorAvail
     @Override
     List<DoctorAvailability> findAll();
 
-    List<DoctorAvailability> findByDoctorId(Long id);
+    List<DoctorAvailability> findAllByDoctorId(Long id);
 
     List<DoctorAvailability> findAllByDoctorIdAndAvailableTrueOrderByDateAscStartTimeAsc (Long doctorId);
 

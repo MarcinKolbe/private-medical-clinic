@@ -41,8 +41,8 @@ public class PatientService {
         user.setBlocked(false);
 
         Patient patient = new Patient();
-        patient.setFirstName(patientRegistrationDto.getFirstName());
-        patient.setLastName(patientRegistrationDto.getLastName());
+        patient.setFirstname(patientRegistrationDto.getFirstname());
+        patient.setLastname(patientRegistrationDto.getLastname());
         patient.setPhoneNumber(patientRegistrationDto.getPhone());
         patient.setPesel(patientRegistrationDto.getPesel());
         patient.setBirthDate(patientRegistrationDto.getBirthDate());
@@ -54,11 +54,21 @@ public class PatientService {
     @Transactional
     public Patient updatePatient(PatientDto patientDto) {
         Patient updatedPatient = getPatient(patientDto.getId());
-        updatedPatient.setFirstName(patientDto.getFirstName());
-        updatedPatient.setLastName(patientDto.getLastName());
-        updatedPatient.setPhoneNumber(updatedPatient.getPhoneNumber());
-        updatedPatient.setPesel(patientDto.getPesel());
-        updatedPatient.setBirthDate(patientDto.getBirthDate());
+        if (patientDto.getFirstname() != null) {
+            updatedPatient.setFirstname(patientDto.getFirstname());
+        }
+        if (patientDto.getLastname() != null) {
+            updatedPatient.setLastname(patientDto.getLastname());
+        }
+        if (patientDto.getPhoneNumber() != 0) {
+            updatedPatient.setPhoneNumber(updatedPatient.getPhoneNumber());
+        }
+        if (patientDto.getPesel() != null) {
+            updatedPatient.setPesel(patientDto.getPesel());
+        }
+        if (patientDto.getBirthDate() != null) {
+            updatedPatient.setBirthDate(patientDto.getBirthDate());
+        }
         patientRepository.save(updatedPatient);
         return updatedPatient;
     }

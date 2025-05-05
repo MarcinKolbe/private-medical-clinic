@@ -5,7 +5,13 @@ import com.rest.private_medical_clinic.domain.Doctor;
 import com.rest.private_medical_clinic.domain.Patient;
 import com.rest.private_medical_clinic.domain.Review;
 import com.rest.private_medical_clinic.domain.dto.ReviewDto;
+import com.rest.private_medical_clinic.exception.AppointmentNotFoundException;
+import com.rest.private_medical_clinic.exception.DoctorNotFoundException;
+import com.rest.private_medical_clinic.exception.PatientNotFoundException;
 import com.rest.private_medical_clinic.exception.ReviewNotFoundException;
+import com.rest.private_medical_clinic.repository.AppointmentRepository;
+import com.rest.private_medical_clinic.repository.DoctorRepository;
+import com.rest.private_medical_clinic.repository.PatientRepository;
 import com.rest.private_medical_clinic.repository.ReviewRepository;
 import com.rest.private_medical_clinic.validator.ReviewValidator;
 import jakarta.transaction.Transactional;
@@ -20,9 +26,9 @@ import java.util.List;
 public class ReviewService {
 
     private final ReviewRepository reviewRepository;
-    private final AppointmentService appointmentService;
-    private final DoctorService doctorService;
-    private final PatientService patientService;
+    private final AppointmentRepository appointmentRepository;
+    private final DoctorRepository doctorRepository;
+    private final PatientRepository patientRepository;
     private final ReviewValidator reviewValidator;
 
     public List<Review> getAllReviews() {
@@ -34,12 +40,14 @@ public class ReviewService {
     }
 
     public List<Review> getReviewsByDoctorId(long doctorId) {
-        Doctor doctor = doctorService.getDoctor(doctorId);
+        Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(
+                () -> new DoctorNotFoundException(doctorId));
         return reviewRepository.findAllByDoctor_Id(doctor.getId());
     }
 
     public List<Review> getReviewsByPatientId(long patientId) {
-        Patient patient = patientService.getPatient(patientId);
+        Patient patient = patientRepository.findById(patientId).orElseThrow(
+                () -> new PatientNotFoundException(patientId));
         return reviewRepository.findAllByPatient_Id(patient.getId());
     }
 
@@ -48,7 +56,8 @@ public class ReviewService {
 
         reviewValidator.validateReview(reviewRequest);
 
-        Appointment appointment = appointmentService.getAppointmentById(reviewRequest.getAppointmentId());
+        Appointment appointment = appointmentRepository.findById(reviewRequest.getAppointmentId()).orElseThrow(
+                () -> new AppointmentNotFoundException(reviewRequest.getAppointmentId()));
 
         Review review = new Review();
         review.setAppointment(appointment);

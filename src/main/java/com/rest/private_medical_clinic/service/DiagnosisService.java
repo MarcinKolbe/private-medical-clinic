@@ -4,8 +4,14 @@ import com.rest.private_medical_clinic.domain.Appointment;
 import com.rest.private_medical_clinic.domain.Diagnosis;
 import com.rest.private_medical_clinic.domain.Doctor;
 import com.rest.private_medical_clinic.domain.Patient;
+import com.rest.private_medical_clinic.exception.AppointmentNotFoundException;
 import com.rest.private_medical_clinic.exception.DiagnosisNotFoundException;
+import com.rest.private_medical_clinic.exception.DoctorNotFoundException;
+import com.rest.private_medical_clinic.exception.PatientNotFoundException;
+import com.rest.private_medical_clinic.repository.AppointmentRepository;
 import com.rest.private_medical_clinic.repository.DiagnosisRepository;
+import com.rest.private_medical_clinic.repository.DoctorRepository;
+import com.rest.private_medical_clinic.repository.PatientRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
@@ -17,9 +23,9 @@ import java.util.List;
 public class DiagnosisService {
 
     private final DiagnosisRepository diagnosisRepository;
-    private final PatientService patientService;
-    private final DoctorService doctorService;
-    private final AppointmentService appointmentService;
+    private final PatientRepository patientRepository;
+    private final DoctorRepository doctorRepository;
+    private final AppointmentRepository appointmentRepository;
 
     public List<Diagnosis> getAllDiagnosis() {
         return diagnosisRepository.findAll();
@@ -42,17 +48,17 @@ public class DiagnosisService {
     }
 
     public List<Diagnosis> getDiagnosisByPatientId(long patientId) {
-        Patient patient = patientService.getPatient(patientId);
+        Patient patient = patientRepository.findById(patientId).orElseThrow(() -> new PatientNotFoundException(patientId));
         return diagnosisRepository.findByAppointment_PatientId(patient.getId());
     }
 
     public List<Diagnosis> getDiagnosisByDoctorId(long doctorId) {
-        Doctor doctor = doctorService.getDoctor(doctorId);
+        Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(() -> new DoctorNotFoundException(doctorId));
         return diagnosisRepository.findByAppointment_DoctorId(doctor.getId());
     }
 
     public Diagnosis getDiagnosisByAppointmentId(long appointmentId) {
-        Appointment appointment = appointmentService.getAppointmentById(appointmentId);
-        return diagnosisRepository.findByAppointment_appointmentId(appointment.getId());
+        Appointment appointment = appointmentRepository.findById(appointmentId).orElseThrow(() -> new AppointmentNotFoundException(appointmentId));
+        return diagnosisRepository.findByAppointment_Id(appointment.getId());
     }
 }

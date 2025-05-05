@@ -5,12 +5,12 @@ import com.rest.private_medical_clinic.repository.DoctorAvailabilityRepository;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import org.springframework.stereotype.Service;
+import org.springframework.stereotype.Component;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
-@Service
+@Component
 @RequiredArgsConstructor
 public class AppointmentValidator {
 
