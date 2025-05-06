@@ -10,6 +10,7 @@ import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 
+import java.time.LocalTime;
 import java.util.List;
 
 @Service
@@ -58,19 +59,29 @@ public class DoctorScheduleTemplateService {
     }
 
     @Transactional
-    public DoctorScheduleTemplate updateDoctorScheduleTemplate(long doctorId, DoctorScheduleTemplateDto doctorScheduleTemplateRequest) {
-        doctorRepository.findById(doctorId).orElseThrow(() -> new DoctorScheduleTemplateException(doctorId));
+    public DoctorScheduleTemplate updateDoctorScheduleTemplate(long templateId, DoctorScheduleTemplateDto doctorScheduleTemplateRequest) {
 
-        if (doctorScheduleTemplateRequest.getStartTime().isAfter(doctorScheduleTemplateRequest.getEndTime())) {
+        DoctorScheduleTemplate doctorScheduleTemplate = getDoctorScheduleTemplateById(templateId);
+
+        LocalTime newStart = doctorScheduleTemplateRequest.getStartTime() != null ? doctorScheduleTemplateRequest.getStartTime() : doctorScheduleTemplate.getStartTime();
+        LocalTime newEnd   = doctorScheduleTemplateRequest.getEndTime()   != null ? doctorScheduleTemplateRequest.getEndTime()   : doctorScheduleTemplate.getEndTime();
+
+        if (newStart.isAfter(newEnd) || newStart.equals(newEnd)) {
             throw new IllegalArgumentException("Start time must be before end time");
         }
 
-        DoctorScheduleTemplate doctorScheduleTemplate = getDoctorScheduleTemplateById(doctorScheduleTemplateRequest.getId());
+        if (doctorScheduleTemplateRequest.getDayOfWeek() != null) {
+            doctorScheduleTemplate.setDayOfWeek(doctorScheduleTemplateRequest.getDayOfWeek());
+        }
+        if (doctorScheduleTemplateRequest.getStartTime() != null) {
+            doctorScheduleTemplate.setStartTime(doctorScheduleTemplateRequest.getStartTime());
+        }
+        if (doctorScheduleTemplateRequest.getEndTime() != null) {
+            doctorScheduleTemplate.setEndTime(doctorScheduleTemplateRequest.getEndTime());
+        }
 
-        doctorScheduleTemplate.setDayOfWeek(doctorScheduleTemplateRequest.getDayOfWeek());
-        doctorScheduleTemplate.setStartTime(doctorScheduleTemplateRequest.getStartTime());
-        doctorScheduleTemplate.setEndTime(doctorScheduleTemplateRequest.getEndTime());
         repository.save(doctorScheduleTemplate);
+
         return doctorScheduleTemplate;
     }
 }

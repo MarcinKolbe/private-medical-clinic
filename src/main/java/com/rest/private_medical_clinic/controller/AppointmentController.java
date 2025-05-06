@@ -6,13 +6,15 @@ import com.rest.private_medical_clinic.domain.dto.AppointmentRegistrationDto;
 import com.rest.private_medical_clinic.domain.dto.DiagnosisDto;
 import com.rest.private_medical_clinic.mapper.AppointmentMapper;
 import com.rest.private_medical_clinic.service.AppointmentService;
-import io.swagger.v3.oas.annotations.parameters.RequestBody;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.format.annotation.DateTimeFormat;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
+import org.springframework.validation.BindingResult;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
@@ -27,6 +29,7 @@ public class AppointmentController {
 
     private final AppointmentService appointmentService;
     private final AppointmentMapper appointmentMapper;
+    private final Logger LOGGER = LoggerFactory.getLogger(AppointmentController.class);
 
     @GetMapping
     public ResponseEntity<List<AppointmentDto>> getAllAppointments(@RequestParam(required = false) String status) {
@@ -42,8 +45,9 @@ public class AppointmentController {
         return ResponseEntity.ok(appointmentMapper.mapToDto(appointment));
     }
 
-    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AppointmentDto> createAppointment(@Valid @RequestBody AppointmentRegistrationDto appointmentRegistrationDto) {
+    @PostMapping(value = ("/register"), consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<AppointmentDto> createAppointment(@Valid @RequestBody AppointmentRegistrationDto appointmentRegistrationDto, BindingResult br) {
+        LOGGER.info("Incoming AppointmentRegistrationDto: {}", appointmentRegistrationDto);
         Appointment appointment = appointmentService.createAppointment(appointmentRegistrationDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(appointmentMapper.mapToDto(appointment));
     }

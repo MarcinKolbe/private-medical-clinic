@@ -50,9 +50,9 @@ public class DoctorScheduleTemplateController {
         return ResponseEntity.ok(doctorScheduleTemplateMapper.mapToDtoList(doctorScheduleTemplates));
     }
 
-    @PutMapping(value = "/doctor/{doctorId}", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<DoctorScheduleTemplateDto> updateTemplate(@PathVariable long doctorId, @RequestBody DoctorScheduleTemplateDto doctorScheduleTemplateDto) {
-        DoctorScheduleTemplate template = doctorScheduleTemplateService.updateDoctorScheduleTemplate(doctorId, doctorScheduleTemplateDto);
+    @PutMapping(value = "/{templateId}", consumes = MediaType.APPLICATION_JSON_VALUE)
+    public ResponseEntity<DoctorScheduleTemplateDto> updateTemplate(@PathVariable long templateId, @RequestBody DoctorScheduleTemplateDto doctorScheduleTemplateDto) {
+        DoctorScheduleTemplate template = doctorScheduleTemplateService.updateDoctorScheduleTemplate(templateId, doctorScheduleTemplateDto);
         return ResponseEntity.ok(doctorScheduleTemplateMapper.mapToDto(template));
     }
 }

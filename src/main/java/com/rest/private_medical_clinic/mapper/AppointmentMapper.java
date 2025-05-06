@@ -5,6 +5,7 @@ import com.rest.private_medical_clinic.domain.Diagnosis;
 import com.rest.private_medical_clinic.domain.Doctor;
 import com.rest.private_medical_clinic.domain.Patient;
 import com.rest.private_medical_clinic.domain.dto.AppointmentDto;
+import com.rest.private_medical_clinic.exception.DiagnosisNotFoundException;
 import com.rest.private_medical_clinic.exception.DoctorNotFoundException;
 import com.rest.private_medical_clinic.exception.PatientNotFoundException;
 import com.rest.private_medical_clinic.repository.DiagnosisRepository;
@@ -24,9 +25,15 @@ public class AppointmentMapper {
     private final DiagnosisRepository diagnosisRepo;
 
     public AppointmentDto mapToDto (Appointment appointment) {
+        long diagnosisId = 0;
+
+        if (appointment.getDiagnosis() != null) {
+            diagnosisId = appointment.getDiagnosis().getId();
+        }
+
         return new AppointmentDto(appointment.getId(), appointment.getDoctor().getId(), appointment.getPatient().getId(),
                 appointment.getDate(), appointment.getTime(), appointment.getStatus(), appointment.getNotes(),
-                appointment.getDiagnosis().getId());
+                diagnosisId);
     }
 
     public Appointment mapToEntity (AppointmentDto appointmentDto) {
@@ -34,7 +41,7 @@ public class AppointmentMapper {
                 () -> new DoctorNotFoundException(appointmentDto.getDoctorId()));
         Patient patient = patientRepo.findById(appointmentDto.getPatientId()).orElseThrow(
                 () -> new PatientNotFoundException(appointmentDto.getPatientId()));
-        Diagnosis diagnosis = diagnosisRepo.findById(appointmentDto.getDiagnoseId()).orElse(null);
+
 
         Appointment appointment =  new Appointment();
         appointment.setId(appointmentDto.getId());
@@ -44,7 +51,13 @@ public class AppointmentMapper {
         appointment.setTime(appointmentDto.getTime());
         appointment.setStatus(appointmentDto.getStatus());
         appointment.setNotes(appointmentDto.getNotes());
-        appointment.setDiagnosis(diagnosis);
+
+        if (appointmentDto.getDiagnoseId() != 0) {
+            Diagnosis diagnosis = diagnosisRepo.findById(appointmentDto.getDiagnoseId()).orElseThrow(
+                    () -> new DiagnosisNotFoundException(appointmentDto.getDiagnoseId()));
+            appointment.setDiagnosis(diagnosis);
+        }
+
         return appointment;
     }
 

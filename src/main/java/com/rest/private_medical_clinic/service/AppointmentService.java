@@ -95,7 +95,7 @@ public class AppointmentService {
     public Appointment rescheduleAppointment(long appointmentId, AppointmentDto appointmentRequest) {
         Appointment appointment = getAppointmentById(appointmentId);
 
-        appointmentValidator.validateAvailability(appointment.getId(), appointmentRequest.getDate(), appointmentRequest.getTime());
+        appointmentValidator.validateAvailability(appointment.getDoctor().getId(), appointmentRequest.getDate(), appointmentRequest.getTime());
 
         doctorAvailabilityService.markSlotAsAvailable(appointment.getDoctor().getId(), appointment.getDate(), appointment.getTime());
 
