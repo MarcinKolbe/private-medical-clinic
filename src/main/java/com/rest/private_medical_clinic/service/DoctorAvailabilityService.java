@@ -26,6 +26,7 @@ public class DoctorAvailabilityService {
     private final DoctorRepository doctorRepository;
     private final DoctorAvailabilityRepository availabilityRepo;
     private final DoctorScheduleTemplateRepository scheduleTemplateRepo;
+    private final HolidayService holidayService;
 
     public List<DoctorAvailability> getAllAvailabilityForAllDoctors() {
         return availabilityRepo.findAll();
@@ -94,7 +95,12 @@ public class DoctorAvailabilityService {
         LocalDate today = LocalDate.now();
         LocalDate endDate = today.plusDays(7);
 
+        List<LocalDate> holidays = holidayService.getHolidaysForYear(today.getYear(), "PL");
+
         for (LocalDate date = today; !date.isAfter(endDate); date = date.plusDays(1)) {
+
+            if (holidays.contains(date)) continue;
+
             DayOfWeek dayOfWeek = date.getDayOfWeek();
 
             for (DoctorScheduleTemplate template : templates) {
@@ -126,7 +132,12 @@ public class DoctorAvailabilityService {
         LocalDate today = LocalDate.now();
         LocalDate endDate = today.plusDays(7);
 
+        List<LocalDate> holidays = holidayService.getHolidaysForYear(today.getYear(), "PL");
+
         for (LocalDate date = today; !date.isAfter(endDate); date = date.plusDays(1)) {
+
+            if (holidays.contains(date)) continue;
+
             DayOfWeek dayOfWeek = date.getDayOfWeek();
 
             if (template.getDayOfWeek() == dayOfWeek) {
