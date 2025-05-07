@@ -19,15 +19,13 @@ public class HolidayMapper {
         if (dto == null || dto.getResponse() == null) {
             return Collections.emptyList();
         }
-        // Mapuję ISO‐stringi na LocalDate
         return dto.getResponse().getHolidays().stream()
+                .filter(h -> h.getPrimary_type().equals("National holiday"))
                 .map(h -> {
                     String iso = h.getDate().getIso();
                     try {
-                        // próba parsowania pełnego formatu z offsetem
                         return OffsetDateTime.parse(iso).toLocalDate();
                     } catch (DateTimeParseException e) {
-                        // fallback dla „czystej” daty
                         return LocalDate.parse(iso);
                     }
                 })

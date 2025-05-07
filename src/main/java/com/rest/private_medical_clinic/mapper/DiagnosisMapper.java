@@ -17,13 +17,15 @@ public class DiagnosisMapper {
 
     public DiagnosisDto mapToDto(Diagnosis diagnosis) {
         return new DiagnosisDto(diagnosis.getId(), diagnosis.getAppointment().getId(), diagnosis.getDescription(),
-                diagnosis.getRecommendation(), diagnosis.getCreatedAt());
+                diagnosis.getRecommendation(), diagnosis.getCreatedAt(), diagnosis.getBrand_name(),
+                diagnosis.getGeneric_name(), diagnosis.getDosage_and_administration());
     }
 
     public Diagnosis mapToEntity(DiagnosisDto diagnosisDto) {
         Appointment appointment = appointmentService.getAppointmentById(diagnosisDto.getAppointmentId());
         return new Diagnosis (diagnosisDto.getId(), appointment, diagnosisDto.getDescription(),
-                diagnosisDto.getRecommendations(), diagnosisDto.getCreatedAt());
+                diagnosisDto.getRecommendations(), diagnosisDto.getCreatedAt(), diagnosisDto.getBrand_name(),
+                diagnosisDto.getGeneric_name(), diagnosisDto.getDosage_and_administration());
     }
 
     public List<DiagnosisDto> mapToDtoList(List<Diagnosis> diagnosisList) {

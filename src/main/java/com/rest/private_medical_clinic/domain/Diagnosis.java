@@ -1,6 +1,7 @@
 package com.rest.private_medical_clinic.domain;
 
 import jakarta.persistence.*;
+import jakarta.websocket.Encoder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -31,4 +32,14 @@ public class Diagnosis {
 
     @Column(name = "CREATED_AT", nullable = false)
     private LocalDateTime createdAt;
+
+    @Column(name = "DRUG_BRAND_NAME")
+    private String brand_name;
+
+    @Column(name = "DRUG_GENERIC_NAME")
+    private String generic_name;
+
+    @Lob
+    @Column(name = "DRUG_DOSAGE", columnDefinition = "TEXT")
+    private String dosage_and_administration;
 }

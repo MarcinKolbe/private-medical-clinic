@@ -7,6 +7,7 @@ import com.rest.private_medical_clinic.domain.Patient;
 import com.rest.private_medical_clinic.domain.dto.AppointmentDto;
 import com.rest.private_medical_clinic.domain.dto.AppointmentRegistrationDto;
 import com.rest.private_medical_clinic.domain.dto.DiagnosisDto;
+import com.rest.private_medical_clinic.domain.dto.OpenFdaResponseDto;
 import com.rest.private_medical_clinic.enums.AppointmentStatus;
 import com.rest.private_medical_clinic.exception.AppointmentNotFoundException;
 import com.rest.private_medical_clinic.exception.DoctorNotFoundException;
@@ -36,6 +37,7 @@ public class AppointmentService {
     private final DiagnosisValidator diagnosisValidator;
     private final DoctorAvailabilityService doctorAvailabilityService;
     private final DiagnosisRepository diagnosisRepository;
+    private final OpenFdaService openFdaService;
 
     public List<Appointment> getAllAppointments() {
         return appointmentRepository.findAll();
@@ -139,6 +141,12 @@ public class AppointmentService {
         diagnosis.setDescription(diagnosisRequest.getDescription());
         diagnosis.setRecommendation(diagnosisRequest.getRecommendations());
         diagnosis.setCreatedAt(LocalDateTime.now());
+        if (diagnosisRequest.getGeneric_name() != null) {
+            OpenFdaResponseDto.DrugLabelDto drug = openFdaService.getDrug(diagnosisRequest.getGeneric_name());
+            diagnosis.setGeneric_name(drug.getOpenfda().getGeneric_name().getFirst());
+            diagnosisRequest.setBrand_name(drug.getOpenfda().getBrand_name().getFirst());
+            diagnosisRequest.setDosage_and_administration(drug.getDosage_and_administration().getFirst());
+        }
         diagnosisRepository.save(diagnosis);
 
         appointment.setDiagnosis(diagnosis);

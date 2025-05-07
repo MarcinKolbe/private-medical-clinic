@@ -8,32 +8,26 @@ import lombok.NoArgsConstructor;
 import java.util.List;
 
 @Data
-@NoArgsConstructor
 @AllArgsConstructor
+@NoArgsConstructor
 @JsonIgnoreProperties(ignoreUnknown = true)
-public class CalendarificResponseDto {
+public class OpenFdaResponseDto {
 
-    private HolidayContainer response;
+    private List<DrugLabelDto> results;
 
     @Data
     @NoArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class HolidayContainer {
-        private List<Holiday> holidays;
+    public static class DrugLabelDto {
+        private List<String> dosage_and_administration;
+        private OpenFdaDto openfda;
     }
 
     @Data
     @NoArgsConstructor
     @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class Holiday {
-        private DateInfo date;
-        private String primary_type;
-    }
-
-    @Data
-    @NoArgsConstructor
-    @JsonIgnoreProperties(ignoreUnknown = true)
-    public static class DateInfo {
-        private String iso;
+    public static class OpenFdaDto {
+        private List<String> brand_name;
+        private List<String> generic_name;
     }
 }

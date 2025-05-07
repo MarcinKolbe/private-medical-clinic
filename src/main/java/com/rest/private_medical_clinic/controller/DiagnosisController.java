@@ -53,4 +53,10 @@ public class DiagnosisController {
         Diagnosis diagnosis = diagnosisService.getDiagnosisByAppointmentId(appointmentId);
         return ResponseEntity.ok(diagnosisMapper.mapToDto(diagnosis));
     }
+
+    @PutMapping
+    public ResponseEntity<DiagnosisDto> updateDiagnosis(@RequestBody DiagnosisDto diagnosisDto) {
+        Diagnosis diagnosis = diagnosisService.updateDiagnosis(diagnosisDto);
+        return ResponseEntity.ok(diagnosisMapper.mapToDto(diagnosis));
+    }
 }

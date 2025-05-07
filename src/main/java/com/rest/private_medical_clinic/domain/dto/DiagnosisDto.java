@@ -16,4 +16,9 @@ public class DiagnosisDto {
     private String description;
     private String recommendations;
     private LocalDateTime createdAt;
+    private String brand_name;
+    private String generic_name;
+    private String dosage_and_administration;
+
+
 }
