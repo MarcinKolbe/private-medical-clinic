@@ -40,4 +40,7 @@ public class Appointment {
 
     @OneToOne(mappedBy = "appointment", cascade = CascadeType.ALL)
     private Diagnosis diagnosis;
+
+    @OneToOne(mappedBy = "appointment", cascade = CascadeType.ALL)
+    private Review review;
 }

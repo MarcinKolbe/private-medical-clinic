@@ -26,8 +26,11 @@ public class ReviewValidator {
             LOGGER.warn("User {} tried to review appointment {} which is not completed",
                     appointment.getPatient().getId(), appointment.getId());
             throw new IllegalStateException("Cannot review an uncompleted appointment");
-        }
-        if (reviewDto.getRating() < 1 || reviewDto.getRating() > 5) {
+        } else if (appointment.getReview() != null) {
+            LOGGER.info("User {} tried to review appointment {} which has been reviewed",
+                    appointment.getPatient().getId(), appointment.getId());
+            throw new IllegalStateException("This appointment has been reviewed.");
+        } else if (reviewDto.getRating() < 1 || reviewDto.getRating() > 5) {
             LOGGER.info("Review attempt with out of range rating");
             throw new IllegalStateException("Rating must be between 1 and 5");
         }

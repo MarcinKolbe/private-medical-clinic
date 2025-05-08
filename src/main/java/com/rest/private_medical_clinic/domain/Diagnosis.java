@@ -1,7 +1,6 @@
 package com.rest.private_medical_clinic.domain;
 
 import jakarta.persistence.*;
-import jakarta.websocket.Encoder;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
