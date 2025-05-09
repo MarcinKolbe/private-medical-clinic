@@ -4,10 +4,12 @@ import com.rest.private_medical_clinic.domain.Doctor;
 import com.rest.private_medical_clinic.domain.DoctorScheduleTemplate;
 import com.rest.private_medical_clinic.domain.dto.DoctorScheduleTemplateDto;
 import com.rest.private_medical_clinic.exception.DoctorScheduleTemplateException;
+import com.rest.private_medical_clinic.observer.DoctorScheduleTemplateChangedEvent;
 import com.rest.private_medical_clinic.repository.DoctorRepository;
 import com.rest.private_medical_clinic.repository.DoctorScheduleTemplateRepository;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.ApplicationEventPublisher;
 import org.springframework.stereotype.Service;
 
 import java.time.LocalTime;
@@ -19,8 +21,7 @@ public class DoctorScheduleTemplateService {
 
     private final DoctorScheduleTemplateRepository repository;
     private final DoctorRepository doctorRepository;
-    private final DoctorAvailabilityService availabilityService;
-    private final DoctorAvailabilityService doctorAvailabilityService;
+    private final ApplicationEventPublisher publisher;
 
     public List<DoctorScheduleTemplate> getAllDoctorScheduleTemplate() {
         return repository.findAll();
@@ -44,7 +45,9 @@ public class DoctorScheduleTemplateService {
         doctorScheduleTemplate.setStartTime(doctorScheduleTemplateRequest.getStartTime());
         doctorScheduleTemplate.setEndTime(doctorScheduleTemplateRequest.getEndTime());
         repository.save(doctorScheduleTemplate);
-        doctorAvailabilityService.generateDoctorAvailabilityForSpecificTemplateForNext7Days(doctorScheduleTemplate.getId());
+
+        publisher.publishEvent(new DoctorScheduleTemplateChangedEvent(this, doctorScheduleTemplate.getId()));
+
         return doctorScheduleTemplate;
     }
 
@@ -81,6 +84,8 @@ public class DoctorScheduleTemplateService {
         }
 
         repository.save(doctorScheduleTemplate);
+
+        publisher.publishEvent(new DoctorScheduleTemplateChangedEvent(this, doctorScheduleTemplate.getId()));
 
         return doctorScheduleTemplate;
     }

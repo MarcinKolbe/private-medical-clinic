@@ -1,13 +1,14 @@
 package com.rest.private_medical_clinic.controller;
 
-import com.rest.private_medical_clinic.domain.Doctor;
 import com.rest.private_medical_clinic.domain.dto.DoctorDto;
 import com.rest.private_medical_clinic.domain.dto.DoctorRegistrationDto;
-import com.rest.private_medical_clinic.mapper.DoctorMapper;
-import com.rest.private_medical_clinic.service.DoctorService;
+import com.rest.private_medical_clinic.facade.DoctorFacade;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,36 +21,35 @@ import java.util.List;
 @RequiredArgsConstructor
 public class DoctorController {
 
-    private final DoctorService doctorService;
-    private final DoctorMapper doctorMapper;
+    private final DoctorFacade doctorFacade;
+    private final Logger LOGGER = LoggerFactory.getLogger(DoctorController.class);
 
     @GetMapping
     public ResponseEntity<List<DoctorDto>> getAllDoctors() {
-        List<Doctor> doctors = doctorService.getAllDoctors();
-        return ResponseEntity.ok(doctorMapper.mapToDtoList(doctors));
+        return ResponseEntity.ok(doctorFacade.getAllDoctors());
     }
 
     @GetMapping("/{doctorId}")
-    public ResponseEntity<DoctorDto> getDoctorById(@PathVariable Long doctorId) {
-        Doctor doctor = doctorService.getDoctor(doctorId);
-        return ResponseEntity.ok(doctorMapper.mapToDto(doctor));
+    public ResponseEntity<DoctorDto> getDoctorById(@PathVariable long doctorId) {
+        return ResponseEntity.ok(doctorFacade.getDoctorById(doctorId));
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> registerDoctor(@Valid @RequestBody DoctorRegistrationDto doctorRegistrationDto) {
-        doctorService.registerDoctor(doctorRegistrationDto);
+        LOGGER.info("Incoming creating request DoctorRegistrationDto: {}", doctorRegistrationDto);
+        doctorFacade.registerDoctor(doctorRegistrationDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DoctorDto> updateDoctor(@Valid @RequestBody DoctorDto doctorDto) {
-        Doctor doctor = doctorService.updateDoctor(doctorDto);
-        return ResponseEntity.ok(doctorMapper.mapToDto(doctor));
+        LOGGER.info("Incoming update request DoctorDto: {}", doctorDto);
+        return ResponseEntity.ok(doctorFacade.updateDoctor(doctorDto));
     }
 
     @DeleteMapping("/{doctorId}")
     public ResponseEntity<Void> deleteDoctor(@PathVariable long doctorId) {
-        doctorService.deleteDoctor(doctorId);
+        doctorFacade.deleteDoctor(doctorId);
         return ResponseEntity.noContent().build();
     }
 }

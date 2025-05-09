@@ -76,7 +76,7 @@ public class AppointmentService {
     }
 
     @Transactional
-    public void cancelAppointment(Long appointmentId) {
+    public void cancelAppointment(long appointmentId) {
         Appointment appointment = getAppointmentById(appointmentId);
 
         if (appointment.getStatus() == AppointmentStatus.CANCELLED) {

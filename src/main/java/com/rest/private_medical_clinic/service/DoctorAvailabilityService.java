@@ -7,22 +7,27 @@ import com.rest.private_medical_clinic.domain.dto.DoctorAvailabilityDto;
 import com.rest.private_medical_clinic.exception.DoctorAvailabilityException;
 import com.rest.private_medical_clinic.exception.DoctorNotFoundException;
 import com.rest.private_medical_clinic.exception.DoctorScheduleTemplateException;
+import com.rest.private_medical_clinic.observer.DoctorScheduleTemplateChangedEvent;
 import com.rest.private_medical_clinic.repository.DoctorAvailabilityRepository;
 import com.rest.private_medical_clinic.repository.DoctorRepository;
 import com.rest.private_medical_clinic.repository.DoctorScheduleTemplateRepository;
+import com.rest.private_medical_clinic.strategy.AvailabilityStrategy;
 import jakarta.transaction.Transactional;
 import lombok.RequiredArgsConstructor;
+import org.springframework.context.event.EventListener;
 import org.springframework.stereotype.Service;
 
 import java.time.DayOfWeek;
 import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
+import java.util.Map;
 
 @Service
 @RequiredArgsConstructor
 public class DoctorAvailabilityService {
 
+    private final Map<String, AvailabilityStrategy> strategies;
     private final DoctorRepository doctorRepository;
     private final DoctorAvailabilityRepository availabilityRepo;
     private final DoctorScheduleTemplateRepository scheduleTemplateRepo;
@@ -64,7 +69,7 @@ public class DoctorAvailabilityService {
         availabilityRepo.delete(doctorAvailability);
     }
 
-    public List<DoctorAvailability> getAvailableSlotsForDoctor(Long doctorId) {
+    public List<DoctorAvailability> getAvailableSlotsForDoctor(long doctorId) {
         return availabilityRepo.findAllByDoctorIdAndAvailableTrueOrderByDateAscStartTimeAsc(doctorId);
     }
 
@@ -122,7 +127,12 @@ public class DoctorAvailabilityService {
         }
     }
 
+    @EventListener
     @Transactional
+    public void onTemplateChange(DoctorScheduleTemplateChangedEvent event) {
+        generateDoctorAvailabilityForSpecificTemplateForNext7Days(event.getTemplateId());
+    }
+
     public void generateDoctorAvailabilityForSpecificTemplateForNext7Days(long templateId) {
         DoctorScheduleTemplate template = scheduleTemplateRepo.findById(templateId).orElseThrow(
                 () -> new DoctorScheduleTemplateException(templateId));
@@ -155,5 +165,11 @@ public class DoctorAvailabilityService {
                 }
             }
         }
+    }
+
+    public boolean checkSlot(long doctorId, LocalDate date, LocalTime start, LocalTime end, String strategyKey) {
+        Doctor doctor = doctorRepository.findById(doctorId).orElseThrow(() -> new DoctorNotFoundException(doctorId));
+        AvailabilityStrategy strategy = strategies.getOrDefault(strategyKey, strategies.get("defaultStrategy"));
+        return strategy.isSlotAvailable(doctor, date, start, end);
     }
 }

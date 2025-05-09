@@ -1,5 +1,6 @@
 package com.rest.private_medical_clinic.repository;
 
+import com.rest.private_medical_clinic.domain.Doctor;
 import com.rest.private_medical_clinic.domain.DoctorAvailability;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
@@ -20,4 +21,6 @@ public interface DoctorAvailabilityRepository extends CrudRepository<DoctorAvail
     List<DoctorAvailability> findAllByDoctorIdAndAvailableTrueOrderByDateAscStartTimeAsc (Long doctorId);
 
     Optional<DoctorAvailability> findByDoctorIdAndDateAndStartTime(long doctorId, LocalDate date, LocalTime startTime);
+
+    List<DoctorAvailability> findByDoctorAndDateAndAvailableTrue(Doctor doctor, LocalDate date);
 }

@@ -228,7 +228,6 @@ public class DbAuditsAndRoutinesInitializer {
         jdbcTemplate.execute(updateDoctorsRating);
     }
 
-    @PostConstruct
     public void createTriggers() {
 
         //If you have problems adding the trigger, do this with root privileges:
