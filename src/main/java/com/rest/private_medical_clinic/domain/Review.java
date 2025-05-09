@@ -11,12 +11,12 @@ import java.time.LocalDateTime;
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "REVIWES")
+@Table(name = "REVIEWS")
 public class Review {
 
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "REVIWE_ID")
+    @Column(name = "REVIEW_ID")
     private long id;
 
     @OneToOne
