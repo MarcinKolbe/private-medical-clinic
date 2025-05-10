@@ -1,7 +1,7 @@
 package com.rest.private_medical_clinic.controller;
 
 import com.rest.private_medical_clinic.domain.dto.OpenFdaResponseDto;
-import com.rest.private_medical_clinic.service.OpenFdaService;
+import com.rest.private_medical_clinic.facade.ExternalDataFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -14,10 +14,10 @@ import org.springframework.web.bind.annotation.RestController;
 @RequiredArgsConstructor
 public class OpenFdaController {
 
-    private final OpenFdaService openFdaService;
+    private final ExternalDataFacade externalDataFacade;
 
     @GetMapping("/{drugName}")
     public ResponseEntity<OpenFdaResponseDto.DrugLabelDto> getDrugSpecification(@PathVariable String drugName) {
-        return ResponseEntity.ok(openFdaService.getDrug(drugName));
+        return ResponseEntity.ok(externalDataFacade.getDrugInfo(drugName));
     }
 }

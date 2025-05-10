@@ -26,7 +26,7 @@ public class PatientService {
         return patientRepository.findAll();
     }
 
-    public Patient getPatient(Long id) {
+    public Patient getPatient(long id) {
         return patientRepository.findById(id).orElseThrow(() -> new PatientNotFoundException(id));
     }
 

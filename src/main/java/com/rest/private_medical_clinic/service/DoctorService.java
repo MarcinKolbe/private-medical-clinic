@@ -61,7 +61,8 @@ public class DoctorService {
         if (doctorDto.getSpecialization() != null) {
             updatedDoctor.setSpecialization(doctorDto.getSpecialization());
         }
-        return doctorRepository.save(updatedDoctor);
+        doctorRepository.save(updatedDoctor);
+        return updatedDoctor;
     }
 
     @Transactional

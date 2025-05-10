@@ -32,12 +32,17 @@ public class UserService {
     }
 
     @Transactional
-    public User updateUser(long id, UserDto userDto) {
-        User user = getUserById(id);
-        user.setUsername(userDto.getUsername());
-        user.setMail(userDto.getMail());
-        user.setUserRole(userDto.getUserRole());
-        user.setBlocked(userDto.isBlocked());
+    public User updateUser(long userId, UserDto userDto) {
+        User user = getUserById(userId);
+        if (userDto.getUsername() != null) {
+            user.setUsername(userDto.getUsername());
+        }
+        if (userDto.getMail() != null) {
+            user.setMail(userDto.getMail());
+        }
+        if (userDto.getUserRole() != null) {
+            user.setUserRole(userDto.getUserRole());
+        }
         userRepository.save(user);
         return user;
     }
@@ -49,22 +54,22 @@ public class UserService {
     }
 
     @Transactional
-    public void resetPassword(long id, PasswordResetDto passwordResetDto) {
-        User user = getUserById(id);
+    public void resetPassword(long userId, PasswordResetDto passwordResetDto) {
+        User user = getUserById(userId);
         user.setPassword(passwordResetDto.getNewPassword());
         userRepository.save(user);
     }
 
     @Transactional
-    public void blockUser(long id) {
-        User user = getUserById(id);
+    public void blockUser(long userId) {
+        User user = getUserById(userId);
         user.setBlocked(true);
         userRepository.save(user);
     }
 
     @Transactional
-    public void unblockUser(long id) {
-        User user = getUserById(id);
+    public void unblockUser(long userId) {
+        User user = getUserById(userId);
         user.setBlocked(false);
         userRepository.save(user);
     }

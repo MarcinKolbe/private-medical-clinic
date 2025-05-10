@@ -36,7 +36,7 @@ public class DoctorController {
 
     @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> registerDoctor(@Valid @RequestBody DoctorRegistrationDto doctorRegistrationDto) {
-        LOGGER.info("Incoming creating request DoctorRegistrationDto: {}", doctorRegistrationDto);
+        LOGGER.info("Incoming create request DoctorRegistrationDto: {}", doctorRegistrationDto);
         doctorFacade.registerDoctor(doctorRegistrationDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }

@@ -42,7 +42,7 @@ public class AppointmentController {
 
     @PostMapping(value = ("/register"), consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<AppointmentDto> createAppointment(@Valid @RequestBody AppointmentRegistrationDto appointmentRegistrationDto) {
-        LOGGER.info("Incoming creating request AppointmentRegistrationDto: {}", appointmentRegistrationDto);
+        LOGGER.info("Incoming create request AppointmentRegistrationDto: {}", appointmentRegistrationDto);
         return ResponseEntity.status(HttpStatus.CREATED).body(appointmentFacade.createAppointment(appointmentRegistrationDto));
     }
 
@@ -81,7 +81,7 @@ public class AppointmentController {
 
     @PutMapping(value = "/{appointmentId}/add-diagnosis", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> addDiagnosisToAppointment(@PathVariable long appointmentId, @Valid @RequestBody DiagnosisDto diagnosisDto) {
-        LOGGER.info("Incoming DiagnosisDto: {}", diagnosisDto);
+        LOGGER.info("Incoming add-diagnosis request DiagnosisDto: {}", diagnosisDto);
         appointmentFacade.addDiagnosisToAppointment(appointmentId, diagnosisDto);
         return ResponseEntity.noContent().build();
     }

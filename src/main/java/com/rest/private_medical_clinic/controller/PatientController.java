@@ -1,13 +1,14 @@
 package com.rest.private_medical_clinic.controller;
 
-import com.rest.private_medical_clinic.domain.Patient;
 import com.rest.private_medical_clinic.domain.dto.PatientDto;
 import com.rest.private_medical_clinic.domain.dto.PatientRegistrationDto;
-import com.rest.private_medical_clinic.mapper.PatientMapper;
-import com.rest.private_medical_clinic.service.PatientService;
+import com.rest.private_medical_clinic.facade.PatientFacade;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -20,36 +21,35 @@ import java.util.List;
 @RequiredArgsConstructor
 public class PatientController {
 
-    private final PatientService patientService;
-    private final PatientMapper patientMapper;
+    private final PatientFacade patientFacade;
+    private final Logger LOGGER = LoggerFactory.getLogger(PatientController.class);
 
     @GetMapping
     public ResponseEntity<List<PatientDto>> getAllPatients() {
-        List<Patient> patients = patientService.getAllPatients();
-        return ResponseEntity.ok(patientMapper.mapToDtoList(patients));
+        return ResponseEntity.ok(patientFacade.getAllPatients());
     }
 
     @GetMapping("/{patientId}")
-    public ResponseEntity<PatientDto> getPatientById(@PathVariable Long patientId) {
-        Patient patient = patientService.getPatient(patientId);
-        return ResponseEntity.ok(patientMapper.mapToDto(patient));
+    public ResponseEntity<PatientDto> getPatientById(@PathVariable long patientId) {
+        return ResponseEntity.ok(patientFacade.getPatientById(patientId));
     }
 
-    @PostMapping
+    @PostMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<Void> registerPatient(@Valid @RequestBody PatientRegistrationDto patientRegistrationDto) {
-        patientService.registerPatient(patientRegistrationDto);
+        LOGGER.info("Incoming create request PatientRegistrationDto: {}", patientRegistrationDto);
+        patientFacade.registerPatient(patientRegistrationDto);
         return ResponseEntity.status(HttpStatus.CREATED).build();
     }
 
-    @PutMapping
+    @PutMapping(consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<PatientDto> updatePatient(@Valid @RequestBody PatientDto patientDto) {
-        Patient patient = patientService.updatePatient(patientDto);
-        return ResponseEntity.ok(patientMapper.mapToDto(patient));
+        LOGGER.info("Incoming update request PatientDto: {}", patientDto);
+        return ResponseEntity.ok(patientFacade.updatePatient(patientDto));
     }
 
     @DeleteMapping("/{patientId}")
     public ResponseEntity<Void> deletePatient(@PathVariable Long patientId) {
-        patientService.deletePatient(patientId);
+        patientFacade.deletePatient(patientId);
         return ResponseEntity.noContent().build();
     }
 }

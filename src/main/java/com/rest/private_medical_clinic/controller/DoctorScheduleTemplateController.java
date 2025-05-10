@@ -40,7 +40,7 @@ public class DoctorScheduleTemplateController {
 
     @PostMapping(value = "/doctor/{doctorId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DoctorScheduleTemplateDto> createTemplateForDoctor(@PathVariable long doctorId, @Valid @RequestBody DoctorScheduleTemplateDto doctorScheduleTemplateDto) {
-        LOGGER.info("Incoming creating request DoctorScheduleTemplateDto: {}", doctorScheduleTemplateDto);
+        LOGGER.info("Incoming create request DoctorScheduleTemplateDto: {}", doctorScheduleTemplateDto);
         return ResponseEntity.ok(doctorScheduleTemplateFacade.createDoctorScheduleTemplate(doctorId, doctorScheduleTemplateDto));
     }
 

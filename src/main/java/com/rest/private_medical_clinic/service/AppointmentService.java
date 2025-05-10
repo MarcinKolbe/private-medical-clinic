@@ -144,8 +144,8 @@ public class AppointmentService {
         if (diagnosisRequest.getGeneric_name() != null) {
             OpenFdaResponseDto.DrugLabelDto drug = openFdaService.getDrug(diagnosisRequest.getGeneric_name());
             diagnosis.setGeneric_name(drug.getOpenfda().getGeneric_name().getFirst());
-            diagnosisRequest.setBrand_name(drug.getOpenfda().getBrand_name().getFirst());
-            diagnosisRequest.setDosage_and_administration(drug.getDosage_and_administration().getFirst());
+            diagnosis.setBrand_name(drug.getOpenfda().getBrand_name().getFirst());
+            diagnosis.setDosage_and_administration(drug.getDosage_and_administration().getFirst());
         }
         diagnosisRepository.save(diagnosis);
 
