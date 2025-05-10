@@ -2,6 +2,7 @@ package com.rest.private_medical_clinic.controller;
 
 import com.rest.private_medical_clinic.domain.dto.AppointmentDto;
 import com.rest.private_medical_clinic.domain.dto.AppointmentRegistrationDto;
+import com.rest.private_medical_clinic.domain.dto.AppointmentRescheduleDto;
 import com.rest.private_medical_clinic.domain.dto.DiagnosisDto;
 import com.rest.private_medical_clinic.facade.AppointmentFacade;
 import jakarta.validation.Valid;
@@ -53,9 +54,9 @@ public class AppointmentController {
     }
 
     @PutMapping(value = "/{appointmentId}/reschedule", consumes = MediaType.APPLICATION_JSON_VALUE)
-    public ResponseEntity<AppointmentDto> rescheduleAppointment(@PathVariable long appointmentId, @Valid @RequestBody AppointmentDto appointmentDto) {
-        LOGGER.info("Incoming reschedule request AppointmentDto: {}", appointmentDto);
-        return ResponseEntity.ok(appointmentFacade.rescheduleAppointment(appointmentId, appointmentDto));
+    public ResponseEntity<AppointmentDto> rescheduleAppointment(@PathVariable long appointmentId, @Valid @RequestBody AppointmentRescheduleDto appointmentRescheduleDto) {
+        LOGGER.info("Incoming reschedule request AppointmentRescheduleDto: {}", appointmentRescheduleDto);
+        return ResponseEntity.ok(appointmentFacade.rescheduleAppointment(appointmentId, appointmentRescheduleDto));
     }
 
     @DeleteMapping("/{appointmentId}")

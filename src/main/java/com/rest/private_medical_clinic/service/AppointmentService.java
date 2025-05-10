@@ -4,10 +4,7 @@ import com.rest.private_medical_clinic.domain.Appointment;
 import com.rest.private_medical_clinic.domain.Diagnosis;
 import com.rest.private_medical_clinic.domain.Doctor;
 import com.rest.private_medical_clinic.domain.Patient;
-import com.rest.private_medical_clinic.domain.dto.AppointmentDto;
-import com.rest.private_medical_clinic.domain.dto.AppointmentRegistrationDto;
-import com.rest.private_medical_clinic.domain.dto.DiagnosisDto;
-import com.rest.private_medical_clinic.domain.dto.OpenFdaResponseDto;
+import com.rest.private_medical_clinic.domain.dto.*;
 import com.rest.private_medical_clinic.enums.AppointmentStatus;
 import com.rest.private_medical_clinic.exception.AppointmentNotFoundException;
 import com.rest.private_medical_clinic.exception.DoctorNotFoundException;
@@ -94,15 +91,15 @@ public class AppointmentService {
     }
 
     @Transactional
-    public Appointment rescheduleAppointment(long appointmentId, AppointmentDto appointmentRequest) {
+    public Appointment rescheduleAppointment(long appointmentId, AppointmentRescheduleDto appointmentRescheduleDto) {
         Appointment appointment = getAppointmentById(appointmentId);
 
-        appointmentValidator.validateAvailability(appointment.getDoctor().getId(), appointmentRequest.getDate(), appointmentRequest.getTime());
+        appointmentValidator.validateAvailability(appointment.getDoctor().getId(), appointmentRescheduleDto.getDate(), appointmentRescheduleDto.getTime());
 
         doctorAvailabilityService.markSlotAsAvailable(appointment.getDoctor().getId(), appointment.getDate(), appointment.getTime());
 
-        appointment.setDate(appointmentRequest.getDate());
-        appointment.setTime(appointmentRequest.getTime());
+        appointment.setDate(appointmentRescheduleDto.getDate());
+        appointment.setTime(appointmentRescheduleDto.getTime());
         appointment.setStatus(AppointmentStatus.RESCHEDULED);
 
         Appointment savedAppointment = appointmentRepository.save(appointment);

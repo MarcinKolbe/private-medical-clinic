@@ -3,6 +3,7 @@ package com.rest.private_medical_clinic.facade;
 import com.rest.private_medical_clinic.domain.Appointment;
 import com.rest.private_medical_clinic.domain.dto.AppointmentDto;
 import com.rest.private_medical_clinic.domain.dto.AppointmentRegistrationDto;
+import com.rest.private_medical_clinic.domain.dto.AppointmentRescheduleDto;
 import com.rest.private_medical_clinic.domain.dto.DiagnosisDto;
 import com.rest.private_medical_clinic.mapper.AppointmentMapper;
 import com.rest.private_medical_clinic.service.AppointmentService;
@@ -43,8 +44,8 @@ public class AppointmentFacade {
         appointmentService.cancelAppointment(appointmentId);
     }
 
-    public AppointmentDto rescheduleAppointment(long appointmentId, AppointmentDto appointmentDto) {
-        Appointment appointment = appointmentService.rescheduleAppointment(appointmentId, appointmentDto);
+    public AppointmentDto rescheduleAppointment(long appointmentId, AppointmentRescheduleDto appointmentRescheduleDto) {
+        Appointment appointment = appointmentService.rescheduleAppointment(appointmentId, appointmentRescheduleDto);
         return appointmentMapper.mapToDto(appointment);
     }
 
