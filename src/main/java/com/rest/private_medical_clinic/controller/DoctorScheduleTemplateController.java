@@ -6,6 +6,7 @@ import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.MediaType;
 import org.springframework.http.ResponseEntity;
 import org.springframework.validation.annotation.Validated;
@@ -41,7 +42,7 @@ public class DoctorScheduleTemplateController {
     @PostMapping(value = "/doctor/{doctorId}", consumes = MediaType.APPLICATION_JSON_VALUE)
     public ResponseEntity<DoctorScheduleTemplateDto> createTemplateForDoctor(@PathVariable long doctorId, @Valid @RequestBody DoctorScheduleTemplateDto doctorScheduleTemplateDto) {
         LOGGER.info("Incoming create request DoctorScheduleTemplateDto: {}", doctorScheduleTemplateDto);
-        return ResponseEntity.ok(doctorScheduleTemplateFacade.createDoctorScheduleTemplate(doctorId, doctorScheduleTemplateDto));
+        return ResponseEntity.status(HttpStatus.CREATED).body(doctorScheduleTemplateFacade.createDoctorScheduleTemplate(doctorId, doctorScheduleTemplateDto));
     }
 
     @GetMapping("/doctor/{doctorId}")

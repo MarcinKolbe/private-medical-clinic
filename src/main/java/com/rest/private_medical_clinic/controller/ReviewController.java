@@ -27,6 +27,7 @@ public class ReviewController {
     public ResponseEntity<List<ReviewDto>> getAllReviews() {
         return ResponseEntity.ok(reviewFacade.getAllReviews());
     }
+
     @GetMapping("/{reviewId}")
     public ResponseEntity<ReviewDto> getReview(@PathVariable long reviewId) {
         return ResponseEntity.ok(reviewFacade.getReviewById(reviewId));
