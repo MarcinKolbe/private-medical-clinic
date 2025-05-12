@@ -2,12 +2,16 @@ package com.rest.private_medical_clinic.domain;
 
 import com.rest.private_medical_clinic.enums.AppointmentStatus;
 import jakarta.persistence.*;
+import lombok.AllArgsConstructor;
 import lombok.Data;
+import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 import java.time.LocalTime;
 
 @Data
+@AllArgsConstructor
+@NoArgsConstructor
 @Entity
 @Table(name = "APPOINTMENTS")
 public class Appointment {
