@@ -61,7 +61,7 @@ public class PatientService {
             updatedPatient.setLastname(patientDto.getLastname());
         }
         if (patientDto.getPhoneNumber() != 0) {
-            updatedPatient.setPhoneNumber(updatedPatient.getPhoneNumber());
+            updatedPatient.setPhoneNumber(patientDto.getPhoneNumber());
         }
         if (patientDto.getPesel() != null) {
             updatedPatient.setPesel(patientDto.getPesel());

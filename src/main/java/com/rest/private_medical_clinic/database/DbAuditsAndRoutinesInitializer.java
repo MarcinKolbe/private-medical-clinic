@@ -11,6 +11,15 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class DbAuditsAndRoutinesInitializer {
 
+    //If you have problems adding the trigger, do this with root privileges:
+    //set global log_bin_trust_function_creators=1;
+    //Or
+    //Open the my.cnf (Linux) or my.ini (Windows) file, usually in the /etc/mysql/ directory or in the MySQL installation directory.
+    //In the [mysqld] section add the line:
+    //[mysqld]
+    //log_bin_trust_function_creators = 1
+    //After that, restart the MySQL server.
+
     private final JdbcTemplate jdbcTemplate;
 
     @PostConstruct
@@ -231,15 +240,6 @@ public class DbAuditsAndRoutinesInitializer {
     }
 
     public void createTriggers() {
-
-        //If you have problems adding the trigger, do this with root privileges:
-        //set global log_bin_trust_function_creators=1;
-        //Or
-        //Open the my.cnf (Linux) or my.ini (Windows) file, usually in the /etc/mysql/ directory or in the MySQL installation directory.
-        //In the [mysqld] section add the line:
-        //[mysqld]
-        //log_bin_trust_function_creators = 1
-        //After that, restart the MySQL server.
 
         String averageRatingUpdate = """
                 DROP TRIGGER IF EXISTS averageRatingUpdate;

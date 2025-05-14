@@ -18,14 +18,12 @@ public class CalendarificClient {
 
     public CalendarificResponseDto fetchHolidays(int year, String country) {
 
-        // Buduję URI z parametrami
         UriComponentsBuilder uri = UriComponentsBuilder
                 .fromHttpUrl(calendarificConfiguration.getApiEndpoint())
                 .queryParam("api_key", calendarificConfiguration.getApiKey())
                 .queryParam("country", country)
                 .queryParam("year", year);
 
-        // Wykonuję GET i parsuję JSON do CalendarificResponseDto
         ResponseEntity<CalendarificResponseDto> resp = restTemplate.exchange(
                 uri.toUriString(),
                 HttpMethod.GET,

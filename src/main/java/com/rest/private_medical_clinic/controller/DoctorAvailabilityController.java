@@ -17,6 +17,7 @@ import java.time.LocalDate;
 import java.time.LocalTime;
 import java.util.List;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/v1/availability")
 @Validated

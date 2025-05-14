@@ -16,7 +16,6 @@ public class DefaultAvailabilityStrategy implements AvailabilityStrategy {
 
     private final DoctorAvailabilityRepository doctorAvailabilityRepository;
 
-
     @Override
     public boolean isSlotAvailable(Doctor doctor, LocalDate date, LocalTime start, LocalTime end) {
         List<DoctorAvailability> slots = doctorAvailabilityRepository

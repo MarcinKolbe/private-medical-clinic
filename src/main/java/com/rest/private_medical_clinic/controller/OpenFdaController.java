@@ -4,11 +4,9 @@ import com.rest.private_medical_clinic.domain.dto.OpenFdaResponseDto;
 import com.rest.private_medical_clinic.facade.ExternalDataFacade;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 
+@CrossOrigin("*")
 @RestController
 @RequestMapping("/v1/medicines")
 @RequiredArgsConstructor
